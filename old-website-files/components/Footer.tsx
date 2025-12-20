@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="flex gap-6 text-sm text-muted-foreground">
             <a href="/terms" className="hover:text-accent transition-colors">Terms</a>
             <a href="/privacy" className="hover:text-accent transition-colors">Privacy</a>
-            <a href="mailto:hello@alakazam.digital" className="hover:text-accent transition-colors">Contact</a>
+            <a href="mailto:hello@alakazamlabs.com" className="hover:text-accent transition-colors">Contact</a>
           </div>
 
           <div className='text-sm text-muted-foreground'>© 2025 LZTEK, LLC dba Alakazam Labs.</div>

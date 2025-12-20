@@ -12,7 +12,7 @@ export default function SEOHead({
   title = 'Alakazam AI - Results So Fast They Feel Like Magic',
   description = 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
   image = 'https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png',
-  url = 'https://alakazam.digital',
+  url = 'https://alakazamlabs.com',
   type = 'website'
 }: SEOHeadProps) {
   useEffect(() => {

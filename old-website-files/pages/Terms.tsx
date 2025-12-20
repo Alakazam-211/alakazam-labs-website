@@ -13,7 +13,7 @@ export default function Terms() {
       <SEOHead 
         title="Terms of Service - Alakazam AI"
         description="Terms of Service for Alakazam AI. Learn about our service terms and conditions."
-        url="https://alakazam.digital/terms"
+        url="https://alakazamlabs.com/terms"
       />
       <Navbar />
       <div className="relative">
@@ -37,8 +37,8 @@ export default function Terms() {
               </p>
               <p className="text-muted-foreground">
                 We're working on our Terms of Service. Please check back soon or contact us at{" "}
-                <a href="mailto:hello@alakazam.digital" className="text-accent hover:underline">
-                  hello@alakazam.digital
+                <a href="mailto:hello@alakazamlabs.com" className="text-accent hover:underline">
+                  hello@alakazamlabs.com
                 </a>{" "}
                 for any questions.
               </p>

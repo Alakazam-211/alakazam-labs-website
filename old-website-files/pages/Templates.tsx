@@ -35,7 +35,7 @@ export default function Templates() {
       <SEOHead 
         title="Solution Catalog - Alakazam AI"
         description="Browse our collection of proven, production-ready AI solutions. Battle-tested templates ready to customize for your business."
-        url="https://alakazam.digital/solutions"
+        url="https://alakazamlabs.com/solutions"
       />
       <Navbar />
       <div className="relative">

@@ -25,7 +25,7 @@ export default function BookSession() {
       <SEOHead 
         title="Book Your Magic Session - Alakazam AI"
         description="Schedule your first session and get a working prototype by the end of it. Fast, professional AI solutions tailored to your needs."
-        url="https://alakazam.digital/book"
+        url="https://alakazamlabs.com/book"
       />
       {/* Back Button */}
       <Button

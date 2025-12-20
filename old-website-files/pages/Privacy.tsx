@@ -13,7 +13,7 @@ export default function Privacy() {
       <SEOHead 
         title="Privacy Policy - Alakazam AI"
         description="Privacy Policy for Alakazam AI. Learn how we protect your data and respect your privacy."
-        url="https://alakazam.digital/privacy"
+        url="https://alakazamlabs.com/privacy"
       />
       <Navbar />
       <div className="relative">
@@ -95,8 +95,8 @@ export default function Privacy() {
                   <p>
                     If you have questions about this Privacy Policy or how we handle your data, 
                     please contact us at{" "}
-                    <a href="mailto:hello@alakazam.digital" className="text-accent hover:underline">
-                      hello@alakazam.digital
+                    <a href="mailto:hello@alakazamlabs.com" className="text-accent hover:underline">
+                      hello@alakazamlabs.com
                     </a>
                   </p>
                 </div>
