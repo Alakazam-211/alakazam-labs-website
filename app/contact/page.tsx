@@ -113,10 +113,12 @@ export default function ContactPage() {
                   <Card className="p-6 bg-card/50 backdrop-blur">
                     <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
                     <div
-                      data-fillout-id="nxZRvfqVcdus"
+                      data-fillout-id="mZD56vi7Lxus"
                       data-fillout-embed-type="standard"
-                      style={{ width: '100%', minHeight: '500px' }}
                       data-fillout-inherit-parameters
+                      data-fillout-dynamic-resize
+                      data-fillout-domain="forms.discover-nocode.com"
+                      style={{ width: '100%', height: '500px' }}
                     />
                   </Card>
                 </motion.div>

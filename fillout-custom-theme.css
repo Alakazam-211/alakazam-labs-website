@@ -1,0 +1,481 @@
+/* 
+ * Alakazam Labs Custom Fillout Theme
+ * Based on the Alakazam website design system
+ * 
+ * Import Montserrat font
+ */
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+ /* 
+  * CSS Variables for Alakazam Theme Colors
+  * Converted from HSL to RGB/Hex for easier use
+  */
+ :root {
+   --alakazam-bg: hsl(240, 10%, 3%);           /* Dark obsidian background */
+   --alakazam-foreground: hsl(240, 5%, 96%);   /* Light gray text */
+   --alakazam-primary: hsl(270, 70%, 60%);     /* Psychic purple */
+   --alakazam-secondary: hsl(200, 100%, 60%);  /* Neon electric blue */
+   --alakazam-accent: hsl(45, 100%, 60%);      /* Iridescent gold */
+   --alakazam-muted: hsl(240, 5%, 15%);        /* Charcoal */
+   --alakazam-border: hsl(240, 5%, 20%);       /* Dark gray border */
+   --alakazam-card: hsl(240, 8%, 8%);          /* Card background */
+   
+   /* Glow colors */
+   --alakazam-purple-glow: rgba(168, 85, 247, 0.3);
+   --alakazam-blue-glow: rgba(0, 191, 255, 0.4);
+   --alakazam-gold-glow: rgba(255, 215, 0, 0.4);
+ }
+ 
+ /* 
+  * Base Form Container Styling
+  */
+ .fillout-field-container {
+   max-width: 600px;
+   margin: 0 auto;
+   padding: 2rem;
+   background: rgba(15, 15, 20, 0.95);
+   backdrop-filter: blur(20px) saturate(180%);
+   -webkit-backdrop-filter: blur(20px) saturate(180%);
+   border: 1px solid rgba(255, 255, 255, 0.1);
+   border-radius: 0.5rem;
+   box-shadow: 
+     0 8px 32px 0 rgba(0, 0, 0, 0.4),
+     0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+ }
+ 
+ /* 
+  * Typography - Apply Montserrat font
+  */
+ .fillout-field-label p,
+ .fillout-field-text h1,
+ .fillout-field-text h2,
+ .fillout-field-text h3,
+ .fillout-field-paragraph p,
+ .fillout-caption p {
+   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+   color: var(--alakazam-foreground);
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+ 
+ /* Field Labels */
+ .fillout-field-label p {
+   font-weight: 600;
+   font-size: 1rem;
+   margin-bottom: 0.5rem;
+   color: var(--alakazam-foreground);
+ }
+ 
+ /* Headings */
+ .fillout-field-text h1 {
+   font-weight: 800;
+   font-size: 2.5rem;
+   line-height: 1.2;
+   margin-bottom: 1rem;
+   background: linear-gradient(135deg, #ff6200 0%, #ff9e62 10%, #ffd700 40%, #00d3ba 85%);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   background-clip: text;
+ }
+ 
+ .fillout-field-text h2 {
+   font-weight: 700;
+   font-size: 2rem;
+   line-height: 1.3;
+   margin-bottom: 0.75rem;
+   color: var(--alakazam-foreground);
+ }
+ 
+ .fillout-field-text h3 {
+   font-weight: 600;
+   font-size: 1.5rem;
+   line-height: 1.4;
+   margin-bottom: 0.5rem;
+   color: var(--alakazam-foreground);
+ }
+ 
+ /* Paragraphs */
+ .fillout-field-paragraph p {
+   font-weight: 400;
+   font-size: 1rem;
+   line-height: 1.6;
+   color: hsl(240, 5%, 75%);
+ }
+ 
+ /* Captions */
+ .fillout-caption p {
+   font-size: 0.875rem;
+   color: hsl(240, 5%, 65%);
+   font-weight: 400;
+ }
+ 
+ /* 
+  * Input Fields - Glass morphism style
+  */
+ .fillout-field-short-answer input,
+ .fillout-field-long-answer textarea,
+ .fillout-field-email input,
+ .fillout-field-number input,
+ .fillout-field-phone input,
+ .fillout-field-url input,
+ .fillout-field-date input,
+ .fillout-field-time input,
+ .fillout-field-datetime input {
+   width: 100%;
+   padding: 0.75rem 1rem;
+   background: rgba(255, 255, 255, 0.1);
+   backdrop-filter: blur(12px) saturate(180%);
+   -webkit-backdrop-filter: blur(12px) saturate(180%);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   border-radius: 0.5rem;
+   color: var(--alakazam-foreground);
+   font-family: 'Montserrat', sans-serif;
+   font-size: 1rem;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   box-shadow: 
+     0 2px 8px 0 rgba(0, 0, 0, 0.2),
+     0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+ }
+ 
+ .fillout-field-short-answer input:focus,
+ .fillout-field-long-answer textarea:focus,
+ .fillout-field-email input:focus,
+ .fillout-field-number input:focus,
+ .fillout-field-phone input:focus,
+ .fillout-field-url input:focus,
+ .fillout-field-date input:focus,
+ .fillout-field-time input:focus,
+ .fillout-field-datetime input:focus {
+   outline: none;
+   border-color: var(--alakazam-primary);
+   box-shadow: 
+     0 0 20px var(--alakazam-purple-glow),
+     0 4px 12px 0 rgba(0, 0, 0, 0.3),
+     0 0 0 2px rgba(168, 85, 247, 0.2) inset;
+   background: rgba(255, 255, 255, 0.15);
+ }
+ 
+ /* Placeholder text */
+ input[type="text"]::placeholder,
+ input[type="email"]::placeholder,
+ input[type="number"]::placeholder,
+ input[type="tel"]::placeholder,
+ input[type="url"]::placeholder,
+ textarea::placeholder {
+   color: hsl(240, 5%, 50%);
+   opacity: 0.7;
+ }
+ 
+ /* 
+  * Dropdown/Select Fields
+  */
+ .fillout-field-dropdown select,
+ .fillout-field-multiple-choice select {
+   width: 100%;
+   padding: 0.75rem 1rem;
+   background: rgba(255, 255, 255, 0.1);
+   backdrop-filter: blur(12px) saturate(180%);
+   -webkit-backdrop-filter: blur(12px) saturate(180%);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   border-radius: 0.5rem;
+   color: var(--alakazam-foreground);
+   font-family: 'Montserrat', sans-serif;
+   font-size: 1rem;
+   cursor: pointer;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   box-shadow: 
+     0 2px 8px 0 rgba(0, 0, 0, 0.2),
+     0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+ }
+ 
+ .fillout-field-dropdown select:focus,
+ .fillout-field-multiple-choice select:focus {
+   outline: none;
+   border-color: var(--alakazam-primary);
+   box-shadow: 
+     0 0 20px var(--alakazam-purple-glow),
+     0 4px 12px 0 rgba(0, 0, 0, 0.3),
+     0 0 0 2px rgba(168, 85, 247, 0.2) inset;
+ }
+ 
+ /* 
+  * Radio Buttons and Checkboxes
+  */
+ .fillout-field-multiple-choice input[type="radio"],
+ .fillout-field-checkboxes input[type="checkbox"] {
+   width: 1.25rem;
+   height: 1.25rem;
+   accent-color: var(--alakazam-primary);
+   cursor: pointer;
+ }
+ 
+ .fillout-field-multiple-choice label,
+ .fillout-field-checkboxes label {
+   font-family: 'Montserrat', sans-serif;
+   color: var(--alakazam-foreground);
+   font-size: 1rem;
+   margin-left: 0.5rem;
+   cursor: pointer;
+ }
+ 
+ /* 
+  * Buttons - Gold shimmer effect
+  */
+ .fillout-field-button button {
+   background: linear-gradient(135deg, hsl(45, 100%, 60%) 0%, hsl(45, 100%, 55%) 100%);
+   color: hsl(240, 10%, 3%);
+   font-family: 'Montserrat', sans-serif;
+   font-weight: 700;
+   font-size: 1rem;
+   padding: 0.75rem 2rem;
+   border: none;
+   border-radius: 0.5rem;
+   cursor: pointer;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   box-shadow: 
+     0 0 20px var(--alakazam-gold-glow),
+     0 4px 16px 0 rgba(0, 0, 0, 0.2),
+     0 0 0 1px rgba(255, 215, 0, 0.2) inset;
+   text-transform: none;
+   letter-spacing: 0.025em;
+ }
+ 
+ .fillout-field-button button:hover {
+   background: linear-gradient(135deg, hsl(45, 100%, 65%) 0%, hsl(45, 100%, 60%) 100%);
+   box-shadow: 
+     0 0 30px rgba(255, 215, 0, 0.6),
+     0 8px 24px 0 rgba(0, 0, 0, 0.3),
+     0 0 0 1px rgba(255, 215, 0, 0.3) inset;
+   transform: translateY(-2px);
+ }
+ 
+ .fillout-field-button button:active {
+   transform: translateY(0);
+   box-shadow: 
+     0 0 15px var(--alakazam-gold-glow),
+     0 2px 8px 0 rgba(0, 0, 0, 0.2),
+     0 0 0 1px rgba(255, 215, 0, 0.2) inset;
+ }
+ 
+ .fillout-field-button button:focus {
+   outline: none;
+   box-shadow: 
+     0 0 30px rgba(255, 215, 0, 0.6),
+     0 4px 16px 0 rgba(0, 0, 0, 0.2),
+     0 0 0 3px rgba(255, 215, 0, 0.3);
+ }
+ 
+ /* 
+  * Back Button
+  */
+ .fillout-back-button {
+   background: rgba(255, 255, 255, 0.1);
+   backdrop-filter: blur(12px) saturate(180%);
+   -webkit-backdrop-filter: blur(12px) saturate(180%);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   border-radius: 0.5rem;
+   padding: 0.5rem 1rem;
+   color: var(--alakazam-foreground);
+   font-family: 'Montserrat', sans-serif;
+   font-weight: 500;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   cursor: pointer;
+ }
+ 
+ .fillout-back-button:hover {
+   background: rgba(255, 255, 255, 0.15);
+   border-color: var(--alakazam-secondary);
+   box-shadow: 0 0 15px var(--alakazam-blue-glow);
+ }
+ 
+ /* 
+  * Skip Button
+  */
+ .fillout-skip-button button {
+   background: transparent;
+   border: 1px solid rgba(255, 255, 255, 0.3);
+   border-radius: 0.5rem;
+   padding: 0.5rem 1rem;
+   color: hsl(240, 5%, 75%);
+   font-family: 'Montserrat', sans-serif;
+   font-weight: 500;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   cursor: pointer;
+ }
+ 
+ .fillout-skip-button button:hover {
+   background: rgba(255, 255, 255, 0.1);
+   border-color: var(--alakazam-secondary);
+   color: var(--alakazam-foreground);
+   box-shadow: 0 0 15px var(--alakazam-blue-glow);
+ }
+ 
+ /* 
+  * Required Asterisk
+  */
+ .fillout-required-asterisk {
+   color: var(--alakazam-accent);
+   font-weight: 700;
+ }
+ 
+ /* 
+  * Validation Error Messages
+  */
+ .fillout-error-validation-message {
+   color: hsl(0, 84%, 60%);
+   font-family: 'Montserrat', sans-serif;
+   font-size: 0.875rem;
+   margin-top: 0.5rem;
+   padding: 0.5rem;
+   background: rgba(220, 38, 38, 0.1);
+   border-left: 3px solid hsl(0, 84%, 60%);
+   border-radius: 0.25rem;
+ }
+ 
+ /* 
+  * File Upload Fields
+  */
+ .fillout-field-file-upload input[type="file"] {
+   padding: 0.75rem;
+   background: rgba(255, 255, 255, 0.1);
+   backdrop-filter: blur(12px) saturate(180%);
+   -webkit-backdrop-filter: blur(12px) saturate(180%);
+   border: 1px dashed rgba(255, 255, 255, 0.3);
+   border-radius: 0.5rem;
+   color: var(--alakazam-foreground);
+   font-family: 'Montserrat', sans-serif;
+   cursor: pointer;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ }
+ 
+ .fillout-field-file-upload input[type="file"]:hover {
+   border-color: var(--alakazam-primary);
+   background: rgba(255, 255, 255, 0.15);
+   box-shadow: 0 0 15px var(--alakazam-purple-glow);
+ }
+ 
+ /* 
+  * Rating/Star Fields
+  */
+ .fillout-field-rating svg,
+ .fillout-field-rating path {
+   fill: var(--alakazam-accent);
+   filter: drop-shadow(0 0 4px var(--alakazam-gold-glow));
+ }
+ 
+ /* 
+  * Slider Fields
+  */
+ .fillout-field-slider input[type="range"] {
+   accent-color: var(--alakazam-primary);
+   height: 0.5rem;
+   border-radius: 0.25rem;
+   background: rgba(255, 255, 255, 0.1);
+ }
+ 
+ .fillout-field-slider input[type="range"]::-webkit-slider-thumb {
+   background: var(--alakazam-primary);
+   box-shadow: 0 0 10px var(--alakazam-purple-glow);
+   border-radius: 50%;
+ }
+ 
+ .fillout-field-slider input[type="range"]::-moz-range-thumb {
+   background: var(--alakazam-primary);
+   box-shadow: 0 0 10px var(--alakazam-purple-glow);
+   border-radius: 50%;
+ }
+ 
+ /* 
+  * Progress Bar
+  */
+ .fillout-progress-bar {
+   background: rgba(255, 255, 255, 0.1);
+   border-radius: 0.5rem;
+   overflow: hidden;
+   height: 0.5rem;
+ }
+ 
+ .fillout-progress-bar-fill {
+   background: linear-gradient(90deg, var(--alakazam-primary) 0%, var(--alakazam-secondary) 100%);
+   height: 100%;
+   border-radius: 0.5rem;
+   box-shadow: 0 0 10px var(--alakazam-purple-glow);
+   transition: width 0.3s ease;
+ }
+ 
+ /* 
+  * Form Background (if accessible)
+  */
+ body {
+   background: var(--alakazam-bg);
+   color: var(--alakazam-foreground);
+   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+ 
+ /* 
+  * Hide Login Profile Icon (if not needed)
+  */
+ .fillout-login-profile {
+   /* Uncomment to hide: display: none; */
+ }
+ 
+ /* 
+  * Hide Theme Logo (if custom logo is used)
+  */
+ .fillout-theme-logo {
+   /* Uncomment to hide: display: none; */
+ }
+ 
+ /* 
+  * Responsive Design
+  */
+ @media (max-width: 768px) {
+   .fillout-field-container {
+     padding: 1.5rem;
+     max-width: 100%;
+   }
+   
+   .fillout-field-text h1 {
+     font-size: 2rem;
+   }
+   
+   .fillout-field-text h2 {
+     font-size: 1.5rem;
+   }
+   
+   .fillout-field-button button {
+     width: 100%;
+     padding: 0.875rem 1.5rem;
+   }
+ }
+ 
+ /* 
+  * Reduced Motion Support
+  */
+ @media (prefers-reduced-motion: reduce) {
+   *,
+   *::before,
+   *::after {
+     animation-duration: 0.01ms !important;
+     animation-iteration-count: 1 !important;
+     transition-duration: 0.01ms !important;
+   }
+   
+   .fillout-field-container {
+     backdrop-filter: blur(8px) saturate(150%);
+     -webkit-backdrop-filter: blur(8px) saturate(150%);
+   }
+ }
+ 
+ /* 
+  * Focus Visible for Accessibility
+  */
+ .fillout-field-short-answer input:focus-visible,
+ .fillout-field-long-answer textarea:focus-visible,
+ .fillout-field-email input:focus-visible,
+ .fillout-field-button button:focus-visible {
+   outline: 2px solid var(--alakazam-primary);
+   outline-offset: 2px;
+ }

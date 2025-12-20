@@ -6,6 +6,11 @@ import { PageTrackingProvider } from '@/components/PageTrackingProvider';
 export const metadata: Metadata = {
   title: 'Alakazam AI - Results So Fast They Feel Like Magic',
   description: 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
+  icons: {
+    icon: '/favicon.jpg',
+    shortcut: '/favicon.jpg',
+    apple: '/favicon.jpg',
+  },
   openGraph: {
     title: 'Alakazam AI - Results So Fast They Feel Like Magic',
     description: 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
@@ -13,7 +18,10 @@ export const metadata: Metadata = {
     siteName: 'Alakazam AI',
     images: [
       {
-        url: 'https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png',
+        url: 'https://alakazam.digital/social-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Alakazam AI',
       },
     ],
     locale: 'en_US',
@@ -23,7 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Alakazam AI - Results So Fast They Feel Like Magic',
     description: 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
-    images: ['https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png'],
+    images: ['https://alakazam.digital/social-image.png'],
   },
 };
 
