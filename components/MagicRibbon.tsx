@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 export default function MagicRibbon() {
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [height, setHeight] = useState('100vh');
 
   useEffect(() => {
     // Check for prefers-reduced-motion
@@ -15,32 +14,13 @@ export default function MagicRibbon() {
     const handleChange = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
     mediaQuery.addEventListener('change', handleChange);
 
-    // Update height to match document height
-    const updateHeight = () => {
-      const docHeight = Math.max(
-        document.body.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.clientHeight,
-        document.documentElement.scrollHeight,
-        document.documentElement.offsetHeight
-      );
-      setHeight(`${docHeight}px`);
-    };
-
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
-    // Also update on scroll to handle dynamic content
-    window.addEventListener('scroll', updateHeight);
-
     return () => {
       mediaQuery.removeEventListener('change', handleChange);
-      window.removeEventListener('resize', updateHeight);
-      window.removeEventListener('scroll', updateHeight);
     };
   }, []);
 
   return (
-    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full max-w-4xl" style={{ height }}>
+    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full max-w-4xl" style={{ height: '100%', minHeight: '100vh' }}>
       <svg
         className="w-full h-full"
         viewBox="0 0 400 2000"
