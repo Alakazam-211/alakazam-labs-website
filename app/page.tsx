@@ -78,8 +78,12 @@ export default function Home() {
       });
     };
     
-    // Force all sections to maintain their height in layout
+    // Force all sections to maintain their height in layout (MOBILE ONLY)
     const forceSectionLayout = () => {
+      // #region agent log
+      const scrollBefore = window.scrollY;
+      // #endregion
+      
       const sections = document.querySelectorAll('section');
       let basePageHeight = 0;
       
@@ -87,13 +91,15 @@ export default function Home() {
         const rect = section.getBoundingClientRect();
         const styles = window.getComputedStyle(section);
         
-        // Force content-visibility and contain
-        (section as HTMLElement).style.setProperty('content-visibility', 'visible', 'important');
-        (section as HTMLElement).style.setProperty('contain', 'none', 'important');
-        (section as HTMLElement).style.setProperty('min-height', 'auto', 'important');
+        // Force content-visibility and contain (MOBILE ONLY)
+        if (isMobile) {
+          (section as HTMLElement).style.setProperty('content-visibility', 'visible', 'important');
+          (section as HTMLElement).style.setProperty('contain', 'none', 'important');
+          (section as HTMLElement).style.setProperty('min-height', 'auto', 'important');
+        }
         
-        // If section has content but zero height, force a minimum height
-        if (section.children.length > 0 && rect.height === 0) {
+        // If section has content but zero height, force a minimum height (MOBILE ONLY)
+        if (isMobile && section.children.length > 0 && rect.height === 0) {
           const computedHeight = Array.from(section.children).reduce((sum, child) => {
             const childRect = (child as HTMLElement).getBoundingClientRect();
             return sum + childRect.height;
@@ -120,6 +126,26 @@ export default function Home() {
         basePageHeight += rect.height || 0;
       });
       
+      // #region agent log
+      const scrollAfter = window.scrollY;
+      if (Math.abs(scrollAfter - scrollBefore) > 5) {
+        sendLog({
+          location: 'app/page.tsx:forceSectionLayout',
+          message: 'Scroll position changed during forceSectionLayout',
+          data: {
+            scrollBefore,
+            scrollAfter,
+            difference: scrollAfter - scrollBefore,
+            isMobile
+          },
+          timestamp: Date.now(),
+          sessionId: 'debug-session',
+          runId: 'post-fix',
+          hypothesisId: 'O'
+        });
+      }
+      // #endregion
+      
       return basePageHeight;
     };
     
@@ -141,11 +167,12 @@ export default function Home() {
         maxPageHeight = currentPageHeight;
       }
       
-      // CRITICAL FIX: Prevent scrolling beyond page bounds (mobile overscroll)
-      if (currentScrollY > maxScrollY + 10) {
+      // CRITICAL FIX: Prevent scrolling beyond page bounds (mobile overscroll ONLY)
+      // #region agent log
+      if (isMobile && currentScrollY > maxScrollY + 10) {
         sendLog({
           location: 'app/page.tsx:useEffect',
-          message: 'SCROLL EXCEEDED PAGE HEIGHT - CLAMPING',
+          message: 'SCROLL EXCEEDED PAGE HEIGHT - CLAMPING (MOBILE ONLY)',
           data: {
             scrollY: currentScrollY,
             maxScrollY,
@@ -159,24 +186,49 @@ export default function Home() {
           hypothesisId: 'J'
         });
         
-        // Clamp scroll position to valid range
+        // Clamp scroll position to valid range (MOBILE ONLY)
         window.scrollTo({
           top: Math.max(0, Math.min(maxScrollY, currentScrollY)),
           behavior: 'auto'
         });
       }
       
-      // Track page height changes (CRITICAL)
-      if (lastPageHeight > 0 && currentPageHeight < lastPageHeight - 50) {
+      // Debug: Track scroll behavior on desktop
+      if (!isMobile && scrollCount % 10 === 0) {
         sendLog({
           location: 'app/page.tsx:useEffect',
-          message: 'PAGE HEIGHT SHRUNK - FORCING LAYOUT',
+          message: 'Desktop scroll check',
+          data: {
+            scrollY: currentScrollY,
+            maxScrollY,
+            pageHeight: currentPageHeight,
+            viewportHeight: window.innerHeight,
+            canScrollDown: currentScrollY < maxScrollY,
+            scrollRemaining: maxScrollY - currentScrollY
+          },
+          timestamp: Date.now(),
+          sessionId: 'debug-session',
+          runId: 'post-fix',
+          hypothesisId: 'K'
+        });
+      }
+      // #endregion
+      
+      // Track page height changes (CRITICAL) - MOBILE ONLY
+      // #region agent log
+      if (isMobile && lastPageHeight > 0 && currentPageHeight < lastPageHeight - 50) {
+        const scrollBeforeFix = window.scrollY;
+        
+        sendLog({
+          location: 'app/page.tsx:useEffect',
+          message: 'PAGE HEIGHT SHRUNK - FORCING LAYOUT (MOBILE ONLY)',
           data: {
             previousHeight: lastPageHeight,
             currentHeight: currentPageHeight,
             maxPageHeight,
             heightDifference: currentPageHeight - lastPageHeight,
             scrollY: currentScrollY,
+            scrollBeforeFix,
             isMobile
           },
           timestamp: Date.now(),
@@ -205,33 +257,92 @@ export default function Home() {
           document.body.offsetHeight;
           document.documentElement.offsetHeight;
         }
+        
+        // Restore scroll position after layout fix (prevent scroll jump)
+        const scrollAfterFix = window.scrollY;
+        if (Math.abs(scrollAfterFix - scrollBeforeFix) > 10) {
+          sendLog({
+            location: 'app/page.tsx:useEffect',
+            message: 'Scroll position changed during layout fix - restoring',
+            data: {
+              scrollBeforeFix,
+              scrollAfterFix,
+              scrollRestored: scrollBeforeFix
+            },
+            timestamp: Date.now(),
+            sessionId: 'debug-session',
+            runId: 'post-fix',
+            hypothesisId: 'M'
+          });
+          window.scrollTo({ top: scrollBeforeFix, behavior: 'auto' });
+        }
       }
+      
+      // Desktop: Log if page height changes unexpectedly (for debugging)
+      if (!isMobile && lastPageHeight > 0 && currentPageHeight < lastPageHeight - 50) {
+        sendLog({
+          location: 'app/page.tsx:useEffect',
+          message: 'Desktop page height changed (not fixing)',
+          data: {
+            previousHeight: lastPageHeight,
+            currentHeight: currentPageHeight,
+            heightDifference: currentPageHeight - lastPageHeight,
+            scrollY: currentScrollY
+          },
+          timestamp: Date.now(),
+          sessionId: 'debug-session',
+          runId: 'post-fix',
+          hypothesisId: 'N'
+        });
+      }
+      // #endregion
       
       lastPageHeight = currentPageHeight;
       lastScrollY = currentScrollY;
       scrollCount++;
     };
 
-    // Initial setup
+    // Initial setup (MOBILE ONLY)
     setTimeout(() => {
-      forceSectionLayout();
+      if (isMobile) {
+        forceSectionLayout();
+      }
       lastPageHeight = document.documentElement.scrollHeight;
       maxPageHeight = lastPageHeight;
       checkPageHeight();
     }, 1000);
     
-    // Prevent overscroll on mobile (rubber band effect)
+    // Prevent overscroll on mobile (rubber band effect) - MOBILE ONLY
     const preventOverscroll = (e: Event) => {
+      // #region agent log
       const scrollHeight = document.documentElement.scrollHeight;
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const clientHeight = window.innerHeight;
       const maxScroll = scrollHeight - clientHeight;
       
-      // Prevent scrolling beyond bounds
+      sendLog({
+        location: 'app/page.tsx:preventOverscroll',
+        message: 'preventOverscroll called',
+        data: {
+          scrollTop,
+          maxScroll,
+          scrollHeight,
+          clientHeight,
+          isMobile,
+          willPrevent: scrollTop < 0 || scrollTop > maxScroll
+        },
+        timestamp: Date.now(),
+        sessionId: 'debug-session',
+        runId: 'post-fix',
+        hypothesisId: 'L'
+      });
+      // #endregion
+      
+      // Prevent scrolling beyond bounds (MOBILE ONLY - should not run on desktop)
       if (scrollTop < 0) {
         window.scrollTo({ top: 0, behavior: 'auto' });
         e.preventDefault();
-      } else if (scrollTop > maxScroll) {
+      } else if (scrollTop > maxScroll + 5) { // Add small buffer
         window.scrollTo({ top: maxScroll, behavior: 'auto' });
         e.preventDefault();
       }
@@ -243,22 +354,25 @@ export default function Home() {
       window.addEventListener('scroll', preventOverscroll, { passive: false });
     }
     
-    // Monitor continuously
+    // Monitor continuously (MOBILE ONLY for forceSectionLayout)
     let checkInterval = setInterval(() => {
       checkPageHeight();
-      // Re-apply fixes every 500ms
-      if (scrollCount % 3 === 0) {
+      // Re-apply fixes every 500ms (MOBILE ONLY)
+      if (isMobile && scrollCount % 3 === 0) {
         forceSectionLayout();
       }
     }, 200);
     
-    // Also check on scroll
+    // Also check on scroll (MOBILE ONLY for forceSectionLayout)
     let scrollTimeout: NodeJS.Timeout;
     const scrollHandler = () => {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         checkPageHeight();
-        forceSectionLayout();
+        // Only call forceSectionLayout on mobile
+        if (isMobile) {
+          forceSectionLayout();
+        }
       }, 50);
     };
     window.addEventListener('scroll', scrollHandler, { passive: true });
