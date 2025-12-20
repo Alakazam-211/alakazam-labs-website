@@ -41,7 +41,7 @@ export default function Navbar() {
         damping: 24,
         mass: 0.9
       }}
-      className="sticky top-0 left-0 right-0 z-[9999] transform-gpu will-change-transform px-4 pt-4"
+      className="fixed top-0 left-0 right-0 z-[9999] transform-gpu will-change-transform px-4 pt-4 w-full bg-background/80 backdrop-blur-sm"
     >
       <nav className="bg-background/95 border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] hover:shadow-[0_12px_48px_0_rgba(255,255,255,0.15)] transition-shadow duration-300 relative max-w-7xl mx-auto overflow-hidden">
         <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
@@ -89,7 +89,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2.5 rounded-md bg-accent text-accent-foreground hover:bg-accent/90 transition-colors z-50 gold-shimmer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="md:hidden p-2.5 rounded-md bg-accent text-accent-foreground hover:bg-accent/90 transition-colors z-50 gold-shimmer min-h-[44px] min-w-[44px] flex items-center justify-center relative"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
@@ -111,7 +111,7 @@ export default function Navbar() {
           </button>
         </div>
         
-        {/* Mobile Menu - expands downward */}
+        {/* Mobile Menu - part of navbar, expands downward */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div

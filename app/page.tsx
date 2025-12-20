@@ -70,7 +70,7 @@ export default function Home() {
         <div className="min-h-screen bg-background text-foreground flex flex-col relative">
           <MagicRibbon />
           <Navbar />
-          <div className="relative flex-grow overflow-x-hidden" style={{ contain: 'layout style' }}>
+          <div className="relative flex-grow overflow-x-hidden pt-20 md:pt-24" style={{ contain: 'layout style' }}>
             <div className="relative" style={{ contain: 'layout style' }}>
               <Hero />
               <div className="relative z-10" style={{ contain: 'layout style' }}>
