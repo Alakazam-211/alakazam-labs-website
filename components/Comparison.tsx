@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function Comparison() {
   const router = useRouter();
   return (
-    <section className="py-16 md:py-24 relative bg-gradient-to-b from-transparent via-muted/10 to-transparent">
+    <section className="pt-32 pb-16 md:pt-24 md:pb-24 relative bg-gradient-to-b from-transparent via-muted/10 to-transparent">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-3xl mx-auto">
           {/* Updated Badge */}
