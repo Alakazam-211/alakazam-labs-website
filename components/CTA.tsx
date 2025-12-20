@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 export default function CTA() {
@@ -14,12 +13,7 @@ export default function CTA() {
       <div className="absolute top-1/2 left-1/2 w-96 h-96 rounded-full aura-gradient-blue blur-3xl opacity-40 cta-bg-animation" />
       
       <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto"
-        >
+        <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-bold mb-6">
             Let's Make <span className="gradient-text">Magic</span>
           </h2>
@@ -34,9 +28,8 @@ export default function CTA() {
             <Sparkles className="mr-2" />
             Book Your Magic Session
           </Button>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
-

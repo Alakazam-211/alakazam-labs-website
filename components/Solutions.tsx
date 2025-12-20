@@ -2,7 +2,6 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -42,14 +41,9 @@ export default function Solutions() {
     <section id="solutions" className="py-24 relative bg-gradient-to-b from-transparent via-muted/10 to-transparent">
       <div className="absolute inset-0 aura-gradient opacity-50" />
       <div className="container mx-auto px-6 relative z-10">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-center mb-16"
-        >
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
           Pick your <span className="gradient-text">Path</span>
-        </motion.h2>
+        </h2>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {paths.map((path, i) => (
@@ -96,4 +90,3 @@ export default function Solutions() {
     </section>
   );
 }
-

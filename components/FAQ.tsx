@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { getFaqs, GetFaqsOutputType } from "@/lib/zite-endpoints-sdk";
 
@@ -32,21 +31,11 @@ export default function FAQ() {
   return (
     <section id="faq" className="pt-24 pb-12 bg-gradient-to-b from-transparent via-muted/10 to-transparent">
       <div className="container mx-auto px-6">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-center mb-16"
-        >
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
           Frequently Asked <span className="gradient-text">Questions</span>
-        </motion.h2>
+        </h2>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto"
-        >
+        <div className="max-w-3xl mx-auto">
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent" style={{ animationDuration: '0.8s', willChange: 'transform' }}></div>
@@ -70,9 +59,8 @@ export default function FAQ() {
               ))}
             </Accordion>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
-
