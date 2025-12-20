@@ -1,0 +1,220 @@
+/* Glass base styles */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.02) inset;
+  border-radius: 2rem;
+}
+
+/* Glass avatar styles for overlapped avatars */
+.glass-avatar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 4px 16px 0 rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-avatar:hover:not(.selected) {
+  transform: scale(1.15);
+  z-index: 50 !important;
+  box-shadow: 
+    0 8px 24px 0 rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+}
+
+.glass-avatar.selected {
+  transform: scale(1);
+  box-shadow: 
+    0 4px 16px 0 rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+.glass-avatar-fallback {
+  background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+}
+
+/* Review bubble - fully opaque for readability */
+.review-bubble {
+  background: rgba(255, 255, 255, 1) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset,
+    0 2px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* Diamond pointer for review bubble - points at profile */
+.review-bubble-diamond {
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+
+.review-bubble-diamond-inner {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-bottom: none;
+  border-right: none;
+  transform: rotate(45deg);
+  box-shadow: 
+    -2px -2px 8px 0 rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+/* Close button for mobile review bubble */
+.review-bubble-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: rgba(107, 114, 128, 0.8);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 2px 8px 0 rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.03) inset;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.review-bubble-close:hover {
+  background: rgba(249, 250, 251, 0.98);
+  color: rgba(55, 65, 81, 1);
+  transform: scale(1.05);
+  box-shadow: 
+    0 4px 12px 0 rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+.review-bubble-close:active {
+  transform: scale(0.95);
+  background: rgba(243, 244, 246, 0.98);
+}
+
+/* 
+ * Star Rating Themes:
+ * 
+ * 1. Glass Stars (.glass-star) - Used in:
+ *    - StarRating component (testimonial cards and main page)
+ *    - Features: Glass morphism effect with backdrop blur, rounded container
+ * 
+ * 2. Simple Stars - Used in:
+ *    - ReviewBubble component (testimonial popup bubble)
+ *    - Features: Plain SVG stars without glass effect for cleaner bubble appearance
+ */
+
+/* Glass star styles for testimonials - Theme 1 */
+.glass-star {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 2px 8px 0 rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.03) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-star-filled {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 
+    0 2px 8px 0 rgba(251, 191, 36, 0.15),
+    0 0 0 1px rgba(251, 191, 36, 0.1) inset;
+}
+
+.glass-star-empty {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.glass-star:hover {
+  transform: scale(1.1);
+  box-shadow: 
+    0 4px 12px 0 rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+/* Fade in zoom animation for review bubble */
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Mobile optimizations for testimonial components */
+@media (max-width: 767px) {
+  /* Touch-friendly avatars */
+  .glass-avatar {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Optimize review bubble for mobile */
+  .review-bubble {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Enhanced close button for mobile */
+  .review-bubble-close {
+    width: 36px;
+    height: 36px;
+    top: 12px;
+    right: 12px;
+  }
+  
+  .review-bubble-close svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Reduce backdrop blur on mobile for better performance */
+  .glass-star,
+  .glass-avatar {
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+  }
+  
+  /* Prevent text selection on touch */
+  .glass-avatar {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Allow text selection in review bubble for copy/paste */
+  .review-bubble blockquote {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+

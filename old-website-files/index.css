@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Obsidian & Dark Base */
+    --background: 240 10% 3%;
+    --foreground: 240 5% 96%;
+
+    /* Card backgrounds - slightly lighter obsidian */
+    --card: 240 8% 8%;
+    --card-foreground: 240 5% 96%;
+
+    --popover: 240 8% 8%;
+    --popover-foreground: 240 5% 96%;
+
+    /* Psychic Purple Primary */
+    --primary: 270 70% 60%;
+    --primary-foreground: 240 5% 96%;
+
+    /* Neon Electric Blue Secondary */
+    --secondary: 200 100% 60%;
+    --secondary-foreground: 240 10% 3%;
+
+    /* Muted charcoal */
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 65%;
+
+    /* Iridescent Gold Accent */
+    --accent: 45 100% 60%;
+    --accent-foreground: 240 10% 3%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 240 5% 96%;
+
+    --border: 240 5% 20%;
+    --input: 240 5% 20%;
+    --ring: 270 70% 60%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Psychic glow effect */
+.psychic-glow {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), 0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+.psychic-glow-strong {
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.5), 0 0 60px rgba(168, 85, 247, 0.3);
+}
+
+/* Neon blue glow */
+.neon-glow {
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.4), 0 0 40px rgba(0, 191, 255, 0.2);
+}
+
+/* Gold shimmer - enhanced for buttons */
+.gold-shimmer {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.2);
+}
+
+.gold-shimmer-strong {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3);
+}
+
+/* Ripple distortion animation */
+@keyframes ripple {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.3;
+  }
+}
+
+.ripple-effect {
+  animation: ripple 3s ease-in-out infinite;
+}
+
+/* Particle float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.float-particle {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #ff6200 0%, #ff9e62 10%, #ffd700 40%, #00d3ba 85%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Aura gradient backgrounds */
+.aura-gradient {
+  background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+}
+
+.aura-gradient-blue {
+  background: radial-gradient(ellipse at center, rgba(0, 191, 255, 0.15) 0%, transparent 70%);
+}
+.long-gradient {
+  background: linear-gradient(
+    to bottom,
+    var(--background) 0%,
+    var(--background) 80%,
+    var(--muted) 100%
+  );
+}
+/* respects the shape of the SVG, not the box */
+.svg-glow-gold {
+  filter:
+    drop-shadow(0 0 2px rgba(255, 215, 0, 0.6))
+    drop-shadow(0 0 6px rgba(255, 215, 0, 0.35))
+    drop-shadow(0 0 12px rgba(255, 215, 0, 0.25));
+}
+
