@@ -60,29 +60,14 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', handleHashNavigation);
   }, []);
 
-  // #region agent log
   // Fix: Force all sections to maintain layout contribution (PREVENT PAGE HEIGHT COLLAPSE)
   useEffect(() => {
     if (!showContent) return;
     
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-    const logEndpoint = 'http://127.0.0.1:7244/ingest/c818746c-bbef-418c-90d3-3e01ae399c6e';
-    
-    const sendLog = (data: any) => {
-      fetch(logEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      }).catch(() => {
-        console.log('[DEBUG]', data.message, JSON.stringify(data.data));
-      });
-    };
     
     // Force all sections to maintain their height in layout (MOBILE ONLY)
     const forceSectionLayout = () => {
-      // #region agent log
-      const scrollBefore = window.scrollY;
-      // #endregion
       
       const sections = document.querySelectorAll('section');
       let basePageHeight = 0;
@@ -107,44 +92,11 @@ export default function Home() {
           
           if (computedHeight > 0) {
             (section as HTMLElement).style.setProperty('min-height', `${computedHeight}px`, 'important');
-            sendLog({
-              location: 'app/page.tsx:forceSectionLayout',
-              message: 'Forced min-height on collapsed section',
-              data: {
-                sectionId: section.id || 'unknown',
-                forcedHeight: computedHeight,
-                childrenCount: section.children.length
-              },
-              timestamp: Date.now(),
-              sessionId: 'debug-session',
-              runId: 'post-fix',
-              hypothesisId: 'I'
-            });
           }
         }
         
         basePageHeight += rect.height || 0;
       });
-      
-      // #region agent log
-      const scrollAfter = window.scrollY;
-      if (Math.abs(scrollAfter - scrollBefore) > 5) {
-        sendLog({
-          location: 'app/page.tsx:forceSectionLayout',
-          message: 'Scroll position changed during forceSectionLayout',
-          data: {
-            scrollBefore,
-            scrollAfter,
-            difference: scrollAfter - scrollBefore,
-            isMobile
-          },
-          timestamp: Date.now(),
-          sessionId: 'debug-session',
-          runId: 'post-fix',
-          hypothesisId: 'O'
-        });
-      }
-      // #endregion
       
       return basePageHeight;
     };
@@ -168,24 +120,7 @@ export default function Home() {
       }
       
       // CRITICAL FIX: Prevent scrolling beyond page bounds (mobile overscroll ONLY)
-      // #region agent log
       if (isMobile && currentScrollY > maxScrollY + 10) {
-        sendLog({
-          location: 'app/page.tsx:useEffect',
-          message: 'SCROLL EXCEEDED PAGE HEIGHT - CLAMPING (MOBILE ONLY)',
-          data: {
-            scrollY: currentScrollY,
-            maxScrollY,
-            pageHeight: currentPageHeight,
-            viewportHeight: window.innerHeight,
-            isMobile
-          },
-          timestamp: Date.now(),
-          sessionId: 'debug-session',
-          runId: 'post-fix',
-          hypothesisId: 'J'
-        });
-        
         // Clamp scroll position to valid range (MOBILE ONLY)
         window.scrollTo({
           top: Math.max(0, Math.min(maxScrollY, currentScrollY)),
@@ -193,49 +128,9 @@ export default function Home() {
         });
       }
       
-      // Debug: Track scroll behavior on desktop
-      if (!isMobile && scrollCount % 10 === 0) {
-        sendLog({
-          location: 'app/page.tsx:useEffect',
-          message: 'Desktop scroll check',
-          data: {
-            scrollY: currentScrollY,
-            maxScrollY,
-            pageHeight: currentPageHeight,
-            viewportHeight: window.innerHeight,
-            canScrollDown: currentScrollY < maxScrollY,
-            scrollRemaining: maxScrollY - currentScrollY
-          },
-          timestamp: Date.now(),
-          sessionId: 'debug-session',
-          runId: 'post-fix',
-          hypothesisId: 'K'
-        });
-      }
-      // #endregion
-      
       // Track page height changes (CRITICAL) - MOBILE ONLY
-      // #region agent log
       if (isMobile && lastPageHeight > 0 && currentPageHeight < lastPageHeight - 50) {
         const scrollBeforeFix = window.scrollY;
-        
-        sendLog({
-          location: 'app/page.tsx:useEffect',
-          message: 'PAGE HEIGHT SHRUNK - FORCING LAYOUT (MOBILE ONLY)',
-          data: {
-            previousHeight: lastPageHeight,
-            currentHeight: currentPageHeight,
-            maxPageHeight,
-            heightDifference: currentPageHeight - lastPageHeight,
-            scrollY: currentScrollY,
-            scrollBeforeFix,
-            isMobile
-          },
-          timestamp: Date.now(),
-          sessionId: 'debug-session',
-          runId: 'post-fix',
-          hypothesisId: 'F'
-        });
         
         // Force layout recalculation
         forceSectionLayout();
@@ -261,41 +156,9 @@ export default function Home() {
         // Restore scroll position after layout fix (prevent scroll jump)
         const scrollAfterFix = window.scrollY;
         if (Math.abs(scrollAfterFix - scrollBeforeFix) > 10) {
-          sendLog({
-            location: 'app/page.tsx:useEffect',
-            message: 'Scroll position changed during layout fix - restoring',
-            data: {
-              scrollBeforeFix,
-              scrollAfterFix,
-              scrollRestored: scrollBeforeFix
-            },
-            timestamp: Date.now(),
-            sessionId: 'debug-session',
-            runId: 'post-fix',
-            hypothesisId: 'M'
-          });
           window.scrollTo({ top: scrollBeforeFix, behavior: 'auto' });
         }
       }
-      
-      // Desktop: Log if page height changes unexpectedly (for debugging)
-      if (!isMobile && lastPageHeight > 0 && currentPageHeight < lastPageHeight - 50) {
-        sendLog({
-          location: 'app/page.tsx:useEffect',
-          message: 'Desktop page height changed (not fixing)',
-          data: {
-            previousHeight: lastPageHeight,
-            currentHeight: currentPageHeight,
-            heightDifference: currentPageHeight - lastPageHeight,
-            scrollY: currentScrollY
-          },
-          timestamp: Date.now(),
-          sessionId: 'debug-session',
-          runId: 'post-fix',
-          hypothesisId: 'N'
-        });
-      }
-      // #endregion
       
       lastPageHeight = currentPageHeight;
       lastScrollY = currentScrollY;
@@ -314,44 +177,28 @@ export default function Home() {
     
     // Prevent overscroll on mobile (rubber band effect) - MOBILE ONLY
     const preventOverscroll = (e: Event) => {
-      // #region agent log
       const scrollHeight = document.documentElement.scrollHeight;
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const clientHeight = window.innerHeight;
       const maxScroll = scrollHeight - clientHeight;
       
-      sendLog({
-        location: 'app/page.tsx:preventOverscroll',
-        message: 'preventOverscroll called',
-        data: {
-          scrollTop,
-          maxScroll,
-          scrollHeight,
-          clientHeight,
-          isMobile,
-          willPrevent: scrollTop < 0 || scrollTop > maxScroll
-        },
-        timestamp: Date.now(),
-        sessionId: 'debug-session',
-        runId: 'post-fix',
-        hypothesisId: 'L'
-      });
-      // #endregion
-      
       // Prevent scrolling beyond bounds (MOBILE ONLY - should not run on desktop)
+      // Only prevent if actually overscrolling, not during normal scrolling
       if (scrollTop < 0) {
         window.scrollTo({ top: 0, behavior: 'auto' });
         e.preventDefault();
-      } else if (scrollTop > maxScroll + 5) { // Add small buffer
+      } else if (scrollTop > maxScroll + 5) {
         window.scrollTo({ top: maxScroll, behavior: 'auto' });
         e.preventDefault();
       }
     };
     
     // Use touchmove for mobile to prevent overscroll
+    // NOTE: Only listen to touchmove, NOT scroll events (scroll events fire after scrolling happens)
     if (isMobile) {
+      // Only listen to touchmove - scroll events fire AFTER scrolling, so preventDefault won't work
       document.addEventListener('touchmove', preventOverscroll, { passive: false });
-      window.addEventListener('scroll', preventOverscroll, { passive: false });
+      // DO NOT listen to scroll events - they fire after scrolling happens and preventDefault won't stop it
     }
     
     // Monitor continuously (MOBILE ONLY for forceSectionLayout)
@@ -382,12 +229,11 @@ export default function Home() {
       window.removeEventListener('scroll', scrollHandler);
       if (isMobile) {
         document.removeEventListener('touchmove', preventOverscroll);
-        window.removeEventListener('scroll', preventOverscroll);
+        // Note: We don't add scroll listener anymore, so no need to remove it
       }
       clearTimeout(scrollTimeout);
     };
   }, [showContent]);
-  // #endregion
 
   return (
     <>
@@ -397,24 +243,6 @@ export default function Home() {
       
       {showContent && (
         <div className="min-h-screen bg-background text-foreground flex flex-col relative">
-          {/* #region agent log */}
-          {(() => {
-            fetch('http://127.0.0.1:7244/ingest/c818746c-bbef-418c-90d3-3e01ae399c6e', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                location: 'app/page.tsx:render',
-                message: 'Content rendered',
-                data: { showContent, isLoading },
-                timestamp: Date.now(),
-                sessionId: 'debug-session',
-                runId: 'run1',
-                hypothesisId: 'E'
-              })
-            }).catch(() => {});
-            return null;
-          })()}
-          {/* #endregion */}
           <MagicRibbon />
           <Navbar />
           <div className="relative flex-grow overflow-x-hidden pt-20 md:pt-24" style={{ minHeight: 'auto', height: 'auto' }}>
