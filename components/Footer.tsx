@@ -20,9 +20,9 @@ export default function Footer() {
 
   return (
     <footer className="relative mt-8 sm:mt-12 md:mt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8 sm:pb-10">
         {/* Let's Work Together Section - Top, Full Width */}
-        <div className="mb-20 sm:mb-24 md:mb-32 text-center">
+        <div className="mb-12 sm:mb-16 md:mb-20 text-center">
           <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-foreground">
             Let's Work Together
           </h4>
@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
 
         {/* Alakazam and Quick Links - Side by Side */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-10">
           {/* Logo & Description Section */}
           <div>
             <Link href="/" className="flex items-center gap-2 mb-3 sm:mb-4">
@@ -72,7 +72,7 @@ export default function Footer() {
         </div>
 
         {/* Newsletter Section - Bottom, Full Width */}
-        <div className="border-t border-border pt-8 sm:pt-12">
+        <div className="border-t border-border pt-6 sm:pt-8">
           <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">
             Join our newsletter
           </h3>
@@ -152,7 +152,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright & Links */}
-        <div className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-border">
+        <div className="mt-8 sm:mt-10 pt-6 sm:pt-6 border-t border-border">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
             <p className="text-muted-foreground text-xs sm:text-sm text-center sm:text-left">
               © 2025 LZTEK, LLC dba Alakazam Labs.
