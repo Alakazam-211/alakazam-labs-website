@@ -154,10 +154,18 @@ export default function Footer() {
         {/* Copyright & Links */}
         <div className="mt-8 sm:mt-10 pt-6 sm:pt-6 border-t border-border">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
-            <p className="text-muted-foreground text-xs sm:text-sm text-center sm:text-left">
-              © 2025 LZTEK, LLC dba Alakazam Labs.
-            </p>
+            <div className="flex flex-col gap-2">
+              <p className="text-muted-foreground text-xs sm:text-sm text-center sm:text-left">
+                © 2025 LZTEK, LLC dba Alakazam Labs.
+              </p>
+              <p className="text-muted-foreground text-xs text-center sm:text-left">
+                Software built with Alakazam is proudly hosted by LZTEK, LLC.
+              </p>
+            </div>
             <div className="flex gap-6 text-xs sm:text-sm text-muted-foreground">
+              <Link href="https://lztek.io" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+                LZTEK
+              </Link>
               <Link href="/terms" className="hover:text-foreground transition-colors">
                 Terms
               </Link>
