@@ -22,7 +22,7 @@ export default function Process() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
             {steps.map((step, i) => (
               <div key={i} className="relative">
-                <Card className="p-8 text-center bg-card/50 backdrop-blur hover:scale-105 transition-transform w-full flex flex-col h-full" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <Card className="p-8 text-center bg-card/50 backdrop-blur hover:scale-105 transition-transform w-full flex flex-col h-full">
                   <div className="mb-6 flex justify-center">
                     <div className={`w-16 h-16 rounded-full bg-background border-2 border-current ${step.color} flex items-center justify-center`}>
                       <step.icon className="w-8 h-8" />

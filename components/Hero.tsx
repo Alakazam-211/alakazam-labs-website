@@ -49,9 +49,9 @@ export default function Hero() {
 
   return <section id="hero" className="relative z-50 min-h-screen flex items-center justify-center pt-10 md:pt-6 pb-8 md:pb-0">
       {/* Static background gradient - no animation */}
-      <div className="absolute inset-0 aura-gradient" style={{ contain: 'layout style paint' }} />
-      <div className="absolute top-20 left-20 w-64 h-64 rounded-full aura-gradient-blue blur-3xl opacity-30" style={{ contain: 'layout style paint', willChange: 'auto' }} />
-      <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full aura-gradient blur-3xl opacity-20" style={{ contain: 'layout style paint', willChange: 'auto' }} />
+      <div className="absolute inset-0 aura-gradient" />
+      <div className="absolute top-20 left-20 w-64 h-64 rounded-full aura-gradient-blue blur-3xl opacity-30" />
+      <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full aura-gradient blur-3xl opacity-20" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <motion.div initial={{

@@ -71,6 +71,11 @@
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
+  
+  /* Ensure elements are always rendered - prevent viewport-based unloading */
+  section {
+    content-visibility: visible;
+  }
 }
 
 /* Psychic glow effect - optimized */
@@ -521,6 +526,12 @@
   /* The sticky class from Tailwind should work, but we ensure webkit prefix for Safari */
   [class*="sticky"] {
     position: -webkit-sticky;
+  }
+  
+  /* Prevent elements from being unloaded outside viewport on mobile */
+  section {
+    content-visibility: visible !important;
+    contain: none !important;
   }
   
   /* Prevent text selection on touch */

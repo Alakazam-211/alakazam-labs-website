@@ -52,7 +52,7 @@ export default function Solutions() {
                 path.highlight 
                   ? 'bg-card/80 backdrop-blur border-accent/50 gold-shimmer' 
                   : 'bg-card/50 backdrop-blur hover:border-accent/30'
-              } transition-colors`} style={{ transform: 'translateZ(0)' }}>
+              } transition-colors`}>
                 <div className="mb-6">
                   <h3 className="text-2xl md:text-3xl font-bold mb-4">{path.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">
