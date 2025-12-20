@@ -42,7 +42,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-3 sm:mb-4">
               <img 
                 src="https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png" 
-                alt="Alakazam AI Logo" 
+                alt="Alakazam Labs Logo" 
                 className="h-8 w-auto" 
               />
             </Link>

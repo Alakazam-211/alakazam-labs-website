@@ -9,7 +9,7 @@ export default function Process() {
   return <section id="process" className="py-24 relative overflow-hidden bg-gradient-to-b from-transparent via-muted/10 to-transparent">
       <div className="container mx-auto px-6 relative z-10">
         <motion.h2 initial={{opacity: 0, y: 20}} whileInView={{opacity: 1, y: 0}} viewport={{once: true}} className="text-4xl md:text-5xl font-bold text-center mb-16 flex items-center justify-center gap-3">
-          The<img src='https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png' alt="Alakazam AI Logo" className='h-10 md:h-12 w-auto inline-block pb-1 mb-[1px]' />Way
+          The<img src='https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png' alt="Alakazam Labs Logo" className='h-10 md:h-12 w-auto inline-block pb-1 mb-[1px]' />Way
         </motion.h2>
 
         <div className="max-w-6xl mx-auto relative">

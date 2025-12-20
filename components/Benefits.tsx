@@ -24,7 +24,7 @@ export default function Benefits() {
         >
           Why<img 
             src="https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png" 
-            alt="Alakazam AI Logo" 
+            alt="Alakazam Labs Logo" 
             className="h-10 md:h-12 w-auto inline-block pb-1 mb-[1px]"
           />?
         </motion.h2>

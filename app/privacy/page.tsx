@@ -3,8 +3,8 @@ import Footer from "@/components/Footer";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Alakazam AI",
-  description: "Privacy Policy for Alakazam AI. Learn how we protect your data and respect your privacy.",
+  title: "Privacy Policy - Alakazam Labs",
+  description: "Privacy Policy for Alakazam Labs. Learn how we protect your data and respect your privacy.",
 };
 
 export default function Privacy() {

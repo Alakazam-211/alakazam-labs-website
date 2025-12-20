@@ -4,7 +4,7 @@ import CookieConsent from '@/components/CookieConsent';
 import { PageTrackingProvider } from '@/components/PageTrackingProvider';
 
 export const metadata: Metadata = {
-  title: 'Alakazam AI - Results So Fast They Feel Like Magic',
+  title: 'Alakazam Labs - Results So Fast They Feel Like Magic',
   description: 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
   icons: {
     icon: '/favicon.jpg',
@@ -12,16 +12,16 @@ export const metadata: Metadata = {
     apple: '/favicon.jpg',
   },
   openGraph: {
-    title: 'Alakazam AI - Results So Fast They Feel Like Magic',
+    title: 'Alakazam Labs - Results So Fast They Feel Like Magic',
     description: 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
     url: 'https://alakazam.digital',
-    siteName: 'Alakazam AI',
+    siteName: 'Alakazam Labs',
     images: [
       {
         url: 'https://alakazam.digital/social-image.png',
         width: 1200,
         height: 630,
-        alt: 'Alakazam AI',
+        alt: 'Alakazam Labs',
       },
     ],
     locale: 'en_US',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Alakazam AI - Results So Fast They Feel Like Magic',
+    title: 'Alakazam Labs - Results So Fast They Feel Like Magic',
     description: 'Get a working prototype app by the end of your first session. Transform your business with AI solutions delivered in hours, not months.',
     images: ['https://alakazam.digital/social-image.png'],
   },

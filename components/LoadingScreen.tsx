@@ -22,7 +22,7 @@ export default function LoadingScreen() {
       >
         <img
           src="https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png"
-          alt="Alakazam AI Logo"
+          alt="Alakazam Labs Logo"
           className="h-16 md:h-20 w-auto"
           loading="eager"
           decoding="async"

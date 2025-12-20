@@ -3,8 +3,8 @@ import Footer from "@/components/Footer";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Terms of Service - Alakazam AI",
-  description: "Terms of Service for Alakazam AI. Learn about our service terms and conditions.",
+  title: "Terms of Service - Alakazam Labs",
+  description: "Terms of Service for Alakazam Labs. Learn about our service terms and conditions.",
 };
 
 export default function Terms() {

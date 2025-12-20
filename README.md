@@ -1,6 +1,6 @@
 # Alakazam Labs Website
 
-A Next.js 16.0.10 website for Alakazam AI, migrated from React Router to Next.js App Router.
+A Next.js 16.0.10 website for Alakazam Labs, migrated from React Router to Next.js App Router.
 
 ## Features
 

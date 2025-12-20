@@ -49,7 +49,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2 cursor-pointer z-50">
             <img 
               src="https://images.fillout.com/orgid-432324/flowpublicid-g4lnna3r1f/widgetid-default/ccWejnUFvPJNvouSVsiL33/pasted-image-1759716559888.png" 
-              alt="Alakazam AI Logo" 
+              alt="Alakazam Labs Logo" 
               className="h-6 sm:h-7 w-auto" 
             />
           </Link>
