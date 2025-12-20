@@ -4,9 +4,98 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 export default function Solutions() {
   const router = useRouter();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // #region agent log
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const logEndpoint = 'http://127.0.0.1:7244/ingest/c818746c-bbef-418c-90d3-3e01ae399c6e';
+    
+    const sendLog = (data: any) => {
+      fetch(logEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(() => {
+        console.log('[DEBUG Solutions]', data.message, data.data);
+      });
+    };
+
+    const checkStyles = () => {
+      const styles = window.getComputedStyle(section);
+      const rect = section.getBoundingClientRect();
+      
+      sendLog({
+        location: 'components/Solutions.tsx:useEffect',
+        message: 'Solutions component styles check',
+        data: {
+          component: 'Solutions',
+          isInViewport: rect.top < window.innerHeight && rect.bottom > 0,
+          top: Math.round(rect.top),
+          bottom: Math.round(rect.bottom),
+          contentVisibility: styles.contentVisibility,
+          contain: styles.contain,
+          display: styles.display,
+          visibility: styles.visibility,
+          opacity: styles.opacity,
+          transform: styles.transform,
+          willChange: styles.willChange,
+          isMobile
+        },
+        timestamp: Date.now(),
+        sessionId: 'debug-session',
+        runId: 'run1',
+        hypothesisId: 'B'
+      });
+    };
+
+    checkStyles();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        sendLog({
+          location: 'components/Solutions.tsx:IntersectionObserver',
+          message: 'Solutions intersection change',
+          data: {
+            component: 'Solutions',
+            isIntersecting: entry.isIntersecting,
+            intersectionRatio: entry.intersectionRatio,
+            boundingClientRect: {
+              top: Math.round(entry.boundingClientRect.top),
+              bottom: Math.round(entry.boundingClientRect.bottom)
+            },
+            isMobile
+          },
+          timestamp: Date.now(),
+          sessionId: 'debug-session',
+          runId: 'run1',
+          hypothesisId: 'D'
+        });
+      });
+    }, { threshold: [0, 0.1, 0.5, 1] });
+
+    observer.observe(section);
+    
+    let scrollTimeout: NodeJS.Timeout;
+    const scrollHandler = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(checkStyles, 100);
+    };
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', scrollHandler);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+  // #endregion
 
   const paths = [
     {
@@ -38,7 +127,7 @@ export default function Solutions() {
   ];
 
   return (
-    <section id="solutions" className="py-24 relative bg-gradient-to-b from-transparent via-muted/10 to-transparent">
+    <section ref={sectionRef} id="solutions" className="py-24 relative bg-gradient-to-b from-transparent via-muted/10 to-transparent">
       <div className="absolute inset-0 aura-gradient opacity-50" />
       <div className="container mx-auto px-6 relative z-10">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">

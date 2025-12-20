@@ -58,6 +58,14 @@
   
   html {
     overflow-x: hidden;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+  }
+  
+  body {
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
   }
   
   /* Optimize rendering performance */
@@ -191,7 +199,7 @@
   pointer-events: none;
   will-change: transform, opacity;
   transform: translateZ(0); /* Force GPU acceleration */
-  contain: layout style paint;
+  contain: none;
 }
 
 .ribbon-particle-1 {
@@ -235,7 +243,7 @@
   animation: ctaBgPulse 15s ease-in-out infinite;
   will-change: transform;
   transform: translate3d(-50%, -50%, 0);
-  contain: layout style paint;
+  contain: none;
 }
 
 /* Gradient text - optimized */
@@ -245,19 +253,19 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   /* Prevent repaints */
-  contain: layout style paint;
+  contain: none;
 }
 
 /* Aura gradient backgrounds - optimized */
 .aura-gradient {
   background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
-  contain: layout style paint;
+  contain: none;
   will-change: auto;
 }
 
 .aura-gradient-blue {
   background: radial-gradient(ellipse at center, rgba(0, 191, 255, 0.15) 0%, transparent 70%);
-  contain: layout style paint;
+  contain: none;
   will-change: auto;
 }
 .long-gradient {
@@ -324,7 +332,7 @@
   /* GPU acceleration hints */
   transform: translateZ(0);
   will-change: transform;
-  contain: layout style paint;
+  contain: none;
 }
 
 .glass-card {
@@ -375,7 +383,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
   will-change: transform;
-  contain: layout style paint;
+  contain: none;
 }
 
 .glass-avatar:hover:not(.selected) {
@@ -528,10 +536,51 @@
     position: -webkit-sticky;
   }
   
-  /* Prevent elements from being unloaded outside viewport on mobile */
+  /* Prevent elements from being unloaded outside viewport on mobile - AGGRESSIVE OVERRIDES */
+  html,
+  body {
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   section {
     content-visibility: visible !important;
     contain: none !important;
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Override contain properties on all child elements to prevent layout collapse */
+  .glass,
+  .glass-avatar,
+  .aura-gradient,
+  .aura-gradient-blue,
+  .ribbon-particle,
+  .cta-bg-animation,
+  .gradient-text,
+  .glass-card {
+    contain: none !important;
+    content-visibility: visible !important;
+  }
+  
+  /* Force all sections and main content to always contribute to page height */
+  main,
+  section,
+  div[class*="container"],
+  div[class*="relative"] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+  
+  /* Prevent any element from being removed from layout */
+  body,
+  html {
+    height: auto !important;
+    min-height: 100% !important;
   }
   
   /* Prevent text selection on touch */
