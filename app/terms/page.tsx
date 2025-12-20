@@ -1,6 +1,3 @@
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import type { Metadata } from 'next';
@@ -17,16 +14,6 @@ export default function Terms() {
       <div className="relative flex-grow">
         <section className="py-32 relative">
           <div className="container mx-auto px-4 md:px-6 relative z-10">
-            <Link href="/">
-              <Button
-                variant="ghost"
-                className="mb-8 text-muted-foreground hover:text-black"
-              >
-                <ArrowLeft className="mr-2 w-4 h-4" />
-                Back to Home
-              </Button>
-            </Link>
-
             <div className="text-center max-w-3xl mx-auto">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
                 Terms of <span className="gradient-text">Service</span>

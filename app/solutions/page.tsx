@@ -1,11 +1,10 @@
 'use client';
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Sparkles, ExternalLink } from "lucide-react";
+import { Sparkles, ExternalLink, Search } from "lucide-react";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,6 +13,7 @@ import { getSolutions, GetSolutionsOutputType } from "@/lib/zite-endpoints-sdk";
 export default function SolutionsPage() {
   const [solutions, setSolutions] = useState<GetSolutionsOutputType['solutions']>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchSolutions = async () => {
@@ -30,6 +30,15 @@ export default function SolutionsPage() {
     fetchSolutions();
   }, []);
 
+  // Filter solutions based on search query
+  const filteredSolutions = solutions.filter((solution) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    const title = (solution.solutionTitle || '').toLowerCase();
+    const description = (solution.description || '').toLowerCase();
+    return title.includes(query) || description.includes(query);
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden flex flex-col">
       <Navbar />
@@ -37,16 +46,6 @@ export default function SolutionsPage() {
         <div className="relative">
           <section className="py-32 relative">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
-              <Link href="/">
-                <Button
-                  variant="ghost"
-                  className="mb-8 text-muted-foreground hover:text-black"
-                >
-                  <ArrowLeft className="mr-2 w-4 h-4" />
-                  Back to Home
-                </Button>
-              </Link>
-
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -55,8 +54,36 @@ export default function SolutionsPage() {
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
                   Solution <span className="gradient-text">Catalog</span>
                 </h1>
-                <p className='text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto'>Browse our collection of proven, production-ready solutions. Each one is battle-tested and ready to customize.</p>
+                <p className='text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8'>Browse our collection of proven, production-ready solutions. Each one is battle-tested and ready to customize.</p>
               </motion.div>
+
+              {/* Search Input */}
+              {!loading && solutions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="max-w-2xl mx-auto mb-12"
+                >
+                  <div className="relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white z-20 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Search solutions..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 bg-card/50 backdrop-blur border border-white/10 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50 transition-all"
+                    />
+                  </div>
+                  {searchQuery && (
+                    <p className="text-sm text-muted-foreground mt-3 text-center">
+                      {filteredSolutions.length === 0 
+                        ? 'No solutions found matching your search.'
+                        : `Found ${filteredSolutions.length} ${filteredSolutions.length === 1 ? 'solution' : 'solutions'}`}
+                    </p>
+                  )}
+                </motion.div>
+              )}
 
               {loading ? (
                 <div className="text-center py-12">
@@ -67,9 +94,13 @@ export default function SolutionsPage() {
                 <div className="text-center py-12">
                   <p className='text-muted-foreground mb-6'>We're curating our best solutions for you. Check back soon!</p>
                 </div>
+              ) : filteredSolutions.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className='text-muted-foreground mb-6'>No solutions found matching "{searchQuery}". Try a different search term.</p>
+                </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                  {solutions.map((solution, i) => (
+                  {filteredSolutions.map((solution, i) => (
                     <motion.div
                       key={solution.id}
                       initial={{ opacity: 0, y: 30 }}

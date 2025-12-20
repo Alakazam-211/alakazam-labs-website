@@ -67,10 +67,10 @@ export default function Home() {
       </AnimatePresence>
       
       {showContent && (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden flex flex-col relative" style={{ contain: 'layout style' }}>
+        <div className="min-h-screen bg-background text-foreground flex flex-col relative">
           <MagicRibbon />
           <Navbar />
-          <div className="relative flex-grow" style={{ contain: 'layout style' }}>
+          <div className="relative flex-grow overflow-x-hidden" style={{ contain: 'layout style' }}>
             <div className="relative" style={{ contain: 'layout style' }}>
               <Hero />
               <div className="relative z-10" style={{ contain: 'layout style' }}>

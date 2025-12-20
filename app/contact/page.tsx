@@ -1,11 +1,10 @@
 'use client';
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Mail, MessageSquare, Calendar, Sparkles } from "lucide-react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect } from "react";
@@ -32,16 +31,6 @@ export default function ContactPage() {
         <div className="relative">
           <section className="py-32 relative">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
-              <Link href="/">
-                <Button
-                  variant="ghost"
-                  className="mb-8 text-muted-foreground hover:text-black"
-                >
-                  <ArrowLeft className="mr-2 w-4 h-4" />
-                  Back to Home
-                </Button>
-              </Link>
-
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -146,7 +135,7 @@ export default function ContactPage() {
                   <Button 
                     size="lg"
                     variant="outline"
-                    className="border-border hover:bg-muted"
+                    className="border-border hover:bg-muted hover:text-foreground"
                   >
                     View Solution Catalog
                   </Button>
