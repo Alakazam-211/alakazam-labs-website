@@ -15,6 +15,7 @@ interface Solution {
   description: string;
   url?: string;
   thumbnail?: Array<{ url: string }>;
+  order?: number;
 }
 
 // Helper function to format URL (add https:// if missing)
@@ -125,15 +126,45 @@ export async function GET() {
           return null;
         }
 
+        // Extract order field - try different possible field names
+        const orderField = 
+          fields['Order'] || 
+          fields.order || 
+          fields.ORDER || 
+          fields.sort_order || 
+          fields['Sort Order'] ||
+          null;
+        
+        // Convert to number, default to 9999 if missing (sorts last)
+        let order: number = 9999;
+        if (orderField !== null && orderField !== undefined) {
+          const orderNum = Number(orderField);
+          if (!isNaN(orderNum)) {
+            order = orderNum;
+          }
+        }
+
         return {
           id: record.id,
           solutionTitle: String(solutionTitle),
           description: String(description),
           url,
           thumbnail: thumbnail && thumbnail.length > 0 ? thumbnail : undefined,
+          order,
         };
       })
       .filter((solution: Solution | null): solution is Solution => solution !== null);
+
+    // Sort solutions by order field (ascending), then by title for same order
+    solutions.sort((a, b) => {
+      const orderA = a.order ?? 9999;
+      const orderB = b.order ?? 9999;
+      if (orderA !== orderB) {
+        return orderA - orderB;
+      }
+      // If order is the same, sort alphabetically by title
+      return a.solutionTitle.localeCompare(b.solutionTitle);
+    });
 
     return NextResponse.json(
       { solutions },

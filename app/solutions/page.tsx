@@ -3,17 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Sparkles, ExternalLink, Search } from "lucide-react";
+import { Sparkles, ExternalLink, Search, Maximize2 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ImagePreviewModal from "@/components/ImagePreviewModal";
 import { getSolutions, GetSolutionsOutputType } from "@/lib/zite-endpoints-sdk";
 
 export default function SolutionsPage() {
   const [solutions, setSolutions] = useState<GetSolutionsOutputType['solutions']>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [previewImage, setPreviewImage] = useState<{ url: string; alt: string } | null>(null);
 
   useEffect(() => {
     const fetchSolutions = async () => {
@@ -109,12 +111,25 @@ export default function SolutionsPage() {
                     >
                       <Card className="p-6 h-full flex flex-col bg-card/50 backdrop-blur hover:border-accent/30 transition-all">
                         {solution.thumbnail && solution.thumbnail[0] && (
-                          <div className="mb-4 rounded-lg overflow-hidden">
+                          <div className="mb-4 rounded-lg overflow-hidden relative group">
                             <img 
                               src={solution.thumbnail[0].url} 
                               alt={solution.solutionTitle || "Solution"}
                               className="w-full h-48 object-cover"
                             />
+                            {/* Preview Button Overlay */}
+                            <button
+                              onClick={() => setPreviewImage({
+                                url: solution.thumbnail![0].url,
+                                alt: solution.solutionTitle || "Solution"
+                              })}
+                              className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/50 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                              aria-label="Preview image"
+                            >
+                              <div className="p-3 rounded-full bg-background/90 backdrop-blur border border-white/20 hover:bg-background transition-colors">
+                                <Maximize2 className="w-5 h-5 text-foreground" />
+                              </div>
+                            </button>
                           </div>
                         )}
                         
@@ -173,6 +188,16 @@ export default function SolutionsPage() {
         </div>
       </div>
       <Footer />
+      
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <ImagePreviewModal
+          imageUrl={previewImage.url}
+          alt={previewImage.alt}
+          isOpen={!!previewImage}
+          onClose={() => setPreviewImage(null)}
+        />
+      )}
     </div>
   );
 }

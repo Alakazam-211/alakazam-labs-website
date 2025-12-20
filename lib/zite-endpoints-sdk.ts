@@ -7,6 +7,7 @@ export interface GetSolutionsOutputType {
     description: string;
     url?: string;
     thumbnail?: Array<{ url: string }>;
+    order?: number;
   }>;
 }
 
