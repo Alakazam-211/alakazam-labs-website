@@ -166,9 +166,9 @@ export default function ReviewBubble({ testimonial, position, onClose, isMobile 
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm sm:text-base text-foreground font-sans truncate">{testimonial.name || 'Anonymous'}</h3>
+            <h3 className="font-semibold text-sm sm:text-base text-foreground font-sans truncate text-left">{testimonial.name || 'Anonymous'}</h3>
             {testimonial.job && testimonial.company && (
-              <p className="text-xs sm:text-sm text-muted-foreground font-sans truncate">
+              <p className="text-xs sm:text-sm text-muted-foreground font-sans truncate text-left">
                 {testimonial.job} at {testimonial.company}
               </p>
             )}
@@ -179,7 +179,7 @@ export default function ReviewBubble({ testimonial, position, onClose, isMobile 
           {renderStars(testimonial.rating || 0)}
         </div>
         
-        <blockquote className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans">
+        <blockquote className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans text-left">
           "{testimonial.text || 'No review text available'}"
         </blockquote>
       </div>
