@@ -486,6 +486,20 @@
 
 /* Mobile optimizations for testimonial components */
 @media (max-width: 767px) {
+  /* Safari iOS Specific Optimizations - backdrop filters are very expensive on Safari */
+  @supports (-webkit-touch-callout: none) {
+    /* Reduce backdrop filter intensity significantly for Safari iOS */
+    .glass,
+    .glass-star,
+    .glass-avatar,
+    nav,
+    .glass-card {
+      /* Significantly reduce blur for Safari - backdrop filters are CPU-intensive on iOS */
+      backdrop-filter: blur(4px) saturate(120%) !important;
+      -webkit-backdrop-filter: blur(4px) saturate(120%) !important;
+    }
+  }
+  
   /* Touch-friendly avatars */
   .glass-avatar {
     touch-action: manipulation;
@@ -595,6 +609,12 @@
   .review-bubble blockquote {
     -webkit-user-select: text;
     user-select: text;
+  }
+  
+  /* Fillout form container - ensure iframe can resize on mobile */
+  .fillout-form-container iframe {
+    max-height: none !important;
+    width: 100% !important;
   }
 }
 
