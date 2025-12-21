@@ -20,10 +20,10 @@ export default function MagicRibbon() {
   }, []);
 
   return (
-    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full max-w-6xl px-8 md:px-12" style={{ height: '100%', minHeight: '100vh' }}>
+    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full" style={{ height: '100%', minHeight: '100vh', paddingLeft: '2rem', paddingRight: '2rem' }}>
       <svg
         className="w-full h-full"
-        viewBox="0 0 400 2000"
+        viewBox="-80 0 560 2000"
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
@@ -33,7 +33,7 @@ export default function MagicRibbon() {
             <stop offset="66%" style={{ stopColor: "rgb(255, 215, 0)", stopOpacity: 0.4 }} />
             <stop offset="100%" style={{ stopColor: "rgb(168, 85, 247)", stopOpacity: 0.3 }} />
           </linearGradient>
-          <filter id="glow">
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="4" result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
@@ -45,6 +45,7 @@ export default function MagicRibbon() {
         {/* Main flowing ribbon path - one-time animation */}
         <motion.path
           d="M200,0 C220,100 230,150 210,250 C190,350 180,400 200,500 C220,600 230,650 210,750 C190,850 180,900 200,1000 C220,1100 230,1150 210,1250 C190,1350 180,1400 200,1500 C220,1600 230,1700 210,1800 C195,1900 200,1950 200,2000"
+          transform="translate(0, 0)"
           stroke="url(#ribbonGradient)"
           strokeWidth="3"
           fill="none"
