@@ -7,17 +7,61 @@ import { Mail, MessageSquare, Calendar, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ContactPage() {
+  const formRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    // Detect iOS Safari
+    const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+    // Listen for Fillout resize messages
+    // Fillout sends: {"type":"form_resized","isFilloutInternalApi":true,"size":469}
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && typeof event.data === 'object') {
+        const isFilloutResize = event.data.type === 'form_resized' && event.data.isFilloutInternalApi;
+        const height = event.data.size || event.data.height || event.data.heightValue;
+        
+        if (isFilloutResize && formRef.current && height && typeof height === 'number') {
+          const iframe = formRef.current.querySelector('iframe') as HTMLIFrameElement | null;
+          if (iframe) {
+            // Apply height to iframe
+            iframe.style.height = `${height}px`;
+            
+            // iOS Safari optimization: also set height on form container and force reflow
+            if (isIOSSafari && formRef.current) {
+              formRef.current.style.height = `${height}px`;
+              // Force reflow to ensure iOS Safari applies the height
+              formRef.current.offsetHeight;
+              iframe.offsetHeight;
+            }
+          }
+        }
+      }
+    };
+    window.addEventListener('message', handleMessage);
+
     // Load Fillout embed script
     const script = document.createElement('script');
     script.src = 'https://server.fillout.com/embed/v1/';
     script.async = true;
+    script.onload = () => {
+      // On iOS Safari, trigger resize events to help Fillout recalculate
+      if (isIOSSafari) {
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+          // Trigger a second resize after a delay to catch any delayed updates
+          setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+          }, 1000);
+        }, 500);
+      }
+    };
     document.body.appendChild(script);
 
     return () => {
+      window.removeEventListener('message', handleMessage);
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
@@ -113,12 +157,14 @@ export default function ContactPage() {
                   <Card className="p-6 bg-card/50 backdrop-blur">
                     <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
                     <div
+                      ref={formRef}
                       data-fillout-id="mZD56vi7Lxus"
                       data-fillout-embed-type="standard"
                       data-fillout-inherit-parameters
                       data-fillout-dynamic-resize
                       data-fillout-domain="forms.discover-nocode.com"
-                      style={{ width: '100%', height: '500px' }}
+                      style={{ width: '100%' }}
+                      className="fillout-form-container"
                     />
                   </Card>
                 </motion.div>

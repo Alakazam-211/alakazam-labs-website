@@ -626,9 +626,32 @@
   }
   
   /* Fillout form container - ensure iframe can resize on mobile */
+  .fillout-form-container {
+    overflow: visible !important;
+    min-height: 0;
+  }
+  
   .fillout-form-container iframe {
     max-height: none !important;
     width: 100% !important;
+    display: block !important;
+    border: none;
+  }
+  
+  /* iOS Safari specific optimizations for Fillout form */
+  @supports (-webkit-touch-callout: none) {
+    .fillout-form-container {
+      -webkit-overflow-scrolling: touch;
+      overflow: visible !important;
+      position: relative;
+    }
+    
+    .fillout-form-container iframe {
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: height;
+      min-height: 400px;
+    }
   }
 }
 
