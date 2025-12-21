@@ -20,7 +20,7 @@ export default function MagicRibbon() {
   }, []);
 
   return (
-    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full max-w-4xl" style={{ height: '100%', minHeight: '100vh' }}>
+    <div className="fixed left-1/2 top-0 pointer-events-none z-[5] -translate-x-1/2 w-full max-w-4xl" style={{ height: '100%', minHeight: '100vh', width: '100vw', maxWidth: '100vw' }}>
       <svg
         className="w-full h-full"
         viewBox="0 0 400 2000"
