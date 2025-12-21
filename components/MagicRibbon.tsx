@@ -20,11 +20,12 @@ export default function MagicRibbon() {
   }, []);
 
   return (
-    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full max-w-4xl" style={{ height: '100%', minHeight: '100vh' }}>
+    <div className="absolute left-1/2 top-0 pointer-events-none z-0 -translate-x-1/2 w-full max-w-4xl" style={{ height: '100%', minHeight: '100vh', paddingLeft: '3rem', paddingRight: '3rem', overflow: 'visible' }}>
       <svg
         className="w-full h-full"
-        viewBox="-80 0 560 2000"
-        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 400 2000"
+        preserveAspectRatio="xMidYMid slice"
+        style={{ overflow: 'visible' }}
       >
         <defs>
           <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -45,7 +46,6 @@ export default function MagicRibbon() {
         {/* Main flowing ribbon path - one-time animation */}
         <motion.path
           d="M200,0 C220,100 230,150 210,250 C190,350 180,400 200,500 C220,600 230,650 210,750 C190,850 180,900 200,1000 C220,1100 230,1150 210,1250 C190,1350 180,1400 200,1500 C220,1600 230,1700 210,1800 C195,1900 200,1950 200,2000"
-          transform="translate(0, 0)"
           stroke="url(#ribbonGradient)"
           strokeWidth="3"
           fill="none"
