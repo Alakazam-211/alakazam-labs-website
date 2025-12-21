@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Montserrat", ...defaultTheme.fontFamily.sans],
+        sans: ["var(--font-montserrat)", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",
