@@ -500,6 +500,20 @@
     }
   }
   
+  /* Safari iOS Specific Optimizations - backdrop filters are very expensive on Safari */
+  @supports (-webkit-touch-callout: none) {
+    /* Reduce backdrop filter intensity significantly for Safari iOS */
+    .glass,
+    .glass-star,
+    .glass-avatar,
+    nav,
+    .glass-card {
+      /* Significantly reduce blur for Safari - backdrop filters are CPU-intensive on iOS */
+      backdrop-filter: blur(2px) saturate(110%) !important;
+      -webkit-backdrop-filter: blur(2px) saturate(110%) !important;
+    }
+  }
+  
   /* Touch-friendly avatars */
   .glass-avatar {
     touch-action: manipulation;
