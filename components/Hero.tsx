@@ -47,9 +47,9 @@ export default function Hero() {
     ? testimonials.reduce((sum, t) => sum + (t.rating || 0), 0) / testimonials.length
     : 0;
 
-  return <section id="hero" className="relative z-10 min-h-screen flex items-center justify-center pt-[130px] md:pt-32 pb-8 md:pb-0">
+  return <section id="hero" className="relative z-50 min-h-screen flex items-center justify-center pt-[130px] md:pt-32 pb-8 md:pb-0">
       {/* Static background gradient - no animation */}
-      <div className="absolute inset-0 aura-gradient z-0" />
+      <div className="absolute inset-0 aura-gradient" />
       <div className="absolute top-20 left-20 w-64 h-64 rounded-full aura-gradient-blue blur-3xl opacity-30" />
       <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full aura-gradient blur-3xl opacity-20" />
 
