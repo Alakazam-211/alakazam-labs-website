@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Performance Optimizations for Mobile & iOS Safari:
+ * - Reduced backdrop-filter intensity on mobile (2-4px vs 16-20px)
+ * - Hardware acceleration hints (translateZ(0)) for smooth scrolling
+ * - Optimized will-change usage (only on hover/active states)
+ * - Throttled scroll/resize handlers
+ * - Disabled LightPillar on mobile for better battery life
+ * - Reduced animation complexity on mobile
+ * - Passive event listeners for better scroll performance
+ */
+
 @layer base {
   :root {
     /* Obsidian & Dark Base */
@@ -61,12 +71,16 @@
   
   body {
     -webkit-overflow-scrolling: touch;
+    /* Don't apply transform to body - it breaks fixed positioning */
   }
   
   /* Optimize rendering performance */
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Smooth scrolling optimization */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
   
   /* Reduce repaints for common elements */
@@ -78,6 +92,54 @@
   /* Ensure elements are always rendered - prevent viewport-based unloading */
   section {
     content-visibility: visible;
+  }
+  
+  /* Optimize scroll containers for iOS Safari */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Hardware acceleration for scroll containers - exclude fixed elements, html, and body */
+  /* Don't apply transform to html or body - it breaks fixed positioning */
+  html {
+    /* No transform - breaks fixed positioning */
+  }
+  
+  body {
+    /* Don't apply transform to body as it can break fixed positioning */
+  }
+  
+  /* Apply hardware acceleration only to scroll containers, not fixed elements */
+  main:not([class*="fixed"]),
+  [role="main"]:not([class*="fixed"]),
+  section:not([class*="fixed"]):not([id*="hero"]),
+  .container:not([class*="fixed"]) {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Explicitly prevent transforms on the main page container that holds the navbar */
+  div.min-h-screen.flex.flex-col {
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+  
+  /* Ensure fixed elements maintain their positioning - critical for navbar */
+  [class*="fixed"],
+  [class*="Fixed"],
+  [class*="fixed"][class*="motion"],
+  [class*="motion"][class*="fixed"],
+  div[class*="fixed"],
+  div.fixed.top-0 {
+    position: fixed !important;
+  }
+  
+  /* Ensure fixed motion elements maintain positioning - framer-motion can use transforms for animation */
+  [class*="motion"][class*="fixed"],
+  [class*="fixed"][class*="motion"],
+  div[class*="fixed"][class*="motion"],
+  div.fixed.top-0[class*="motion"] {
+    position: fixed !important;
   }
 }
 
@@ -102,8 +164,11 @@
 .gold-shimmer {
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.2);
   transform: translateZ(0);
-  will-change: box-shadow;
   transition: box-shadow 150ms ease-in-out;
+}
+
+.gold-shimmer:hover {
+  will-change: box-shadow;
 }
 
 .gold-shimmer:hover {
@@ -113,8 +178,11 @@
 .gold-shimmer-strong {
   box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3);
   transform: translateZ(0);
-  will-change: box-shadow;
   transition: box-shadow 150ms ease-in-out;
+}
+
+.gold-shimmer-strong:hover {
+  will-change: box-shadow;
 }
 
 .gold-shimmer-strong:hover {
@@ -157,9 +225,22 @@
 
 .cta-bg-animation {
   animation: ctaBgPulse 15s ease-in-out infinite;
-  will-change: transform;
   transform: translate3d(-50%, -50%, 0);
   contain: none;
+  /* Only use will-change when animation is running */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cta-bg-animation {
+    will-change: transform;
+  }
+}
+
+/* Disable CTA animation on mobile for better performance */
+@media (max-width: 767px) {
+  .cta-bg-animation {
+    animation: none;
+  }
 }
 
 /* Gradient text - optimized */
@@ -245,9 +326,8 @@
     0 8px 32px 0 rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(0, 0, 0, 0.02) inset;
   border-radius: 2rem;
-  /* GPU acceleration hints */
+  /* GPU acceleration hints - only when needed */
   transform: translateZ(0);
-  will-change: transform;
   contain: none;
 }
 
@@ -298,7 +378,6 @@
     0 0 0 1px rgba(0, 0, 0, 0.05) inset;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
-  will-change: transform;
   contain: none;
 }
 
@@ -410,29 +489,20 @@
 @media (max-width: 767px) {
   /* Safari iOS Specific Optimizations - backdrop filters are very expensive on Safari */
   @supports (-webkit-touch-callout: none) {
-    /* Reduce backdrop filter intensity significantly for Safari iOS */
+    /* Significantly reduce blur for Safari - backdrop filters are CPU-intensive on iOS */
     .glass,
     .glass-star,
     .glass-avatar,
     nav,
     .glass-card {
-      /* Significantly reduce blur for Safari - backdrop filters are CPU-intensive on iOS */
-      backdrop-filter: blur(4px) saturate(120%) !important;
-      -webkit-backdrop-filter: blur(4px) saturate(120%) !important;
-    }
-  }
-  
-  /* Safari iOS Specific Optimizations - backdrop filters are very expensive on Safari */
-  @supports (-webkit-touch-callout: none) {
-    /* Reduce backdrop filter intensity significantly for Safari iOS */
-    .glass,
-    .glass-star,
-    .glass-avatar,
-    nav,
-    .glass-card {
-      /* Significantly reduce blur for Safari - backdrop filters are CPU-intensive on iOS */
       backdrop-filter: blur(2px) saturate(110%) !important;
       -webkit-backdrop-filter: blur(2px) saturate(110%) !important;
+    }
+    
+    /* Disable will-change on mobile Safari to save battery */
+    .glass,
+    .glass-avatar {
+      will-change: auto !important;
     }
   }
   
@@ -464,14 +534,46 @@
   /* Reduce backdrop blur on mobile for better performance */
   .glass-star,
   .glass-avatar {
-    backdrop-filter: blur(8px) saturate(150%);
-    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    backdrop-filter: blur(4px) saturate(120%);
+    -webkit-backdrop-filter: blur(4px) saturate(120%);
   }
   
   /* Reduce blur on navbar for mobile */
   nav {
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    backdrop-filter: blur(6px) saturate(120%);
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+  }
+  
+  /* Optimize animations on mobile - reduce motion for better performance */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Reduce animation complexity on mobile */
+    .cta-bg-animation {
+      animation-duration: 20s; /* Slower = less CPU */
+    }
+  }
+  
+  /* iOS Safari specific optimizations */
+  @supports (-webkit-touch-callout: none) {
+    /* Reduce animation frame rate on iOS for better battery life */
+    @media (max-width: 767px) {
+      * {
+        animation-timing-function: ease-out !important;
+      }
+      
+      /* Simplify transforms on iOS - exclude fixed elements */
+      [class*="motion"]:not([class*="fixed"]) {
+        transition-duration: 0.3s !important;
+      }
+    }
+  }
+  
+  /* Reduce framer-motion complexity on mobile for better scroll performance */
+  @media (max-width: 767px) {
+    /* Simplify transforms for mobile - exclude fixed elements */
+    [class*="motion"]:not([class*="fixed"]) {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
   }
   
   /* Ensure navbar sticky positioning works on mobile Safari */
@@ -481,10 +583,16 @@
   }
   
   /* Prevent elements from being unloaded outside viewport on mobile - AGGRESSIVE OVERRIDES */
-  html,
+  html {
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: touch;
+    /* Don't apply transform - it breaks fixed positioning */
+  }
+  
   body {
     overscroll-behavior: none !important;
     -webkit-overflow-scrolling: touch;
+    /* Don't apply transform to body - it breaks fixed positioning */
   }
   
   /* Desktop: Allow normal scrolling */
@@ -622,7 +730,13 @@
   );
   background-size: 200% 100%;
   animation: skeleton-shine 1.5s ease-in-out infinite;
-  will-change: background-position;
+  /* Only use will-change when animation is active */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton-shine {
+    will-change: background-position;
+  }
 }
 
 .skeleton-shine-avatar {
@@ -634,7 +748,12 @@
   );
   background-size: 200% 100%;
   animation: skeleton-shine 1.5s ease-in-out infinite;
-  will-change: background-position;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton-shine-avatar {
+    will-change: background-position;
+  }
 }
 
 
@@ -645,9 +764,14 @@
   height: 100%;
   opacity: 0.4;
   filter: blur(80px);
-  will-change: transform, opacity;
   transform: translateZ(0);
   pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .color-bend {
+    will-change: transform, opacity;
+  }
 }
 
 .color-bend-1 {

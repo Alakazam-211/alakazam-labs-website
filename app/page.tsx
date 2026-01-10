@@ -37,7 +37,18 @@ export default function Home() {
   const [showContent, setShowContent] = useState(false);
   const [lightPillarHeight, setLightPillarHeight] = useState<string>('100vh');
   const [lightPillarTop, setLightPillarTop] = useState<string>('0px');
+  const [isMobile, setIsMobile] = useState(false);
   const heroComparisonRef = useRef<HTMLDivElement>(null);
+  
+  // Detect mobile on client side
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     // Show content immediately but keep loading screen visible
@@ -141,39 +152,71 @@ export default function Home() {
     // Initial calculation after content renders
     const timer = setTimeout(updateLightPillarHeight, 100);
     
-    // Update on resize and scroll
+    // Declare timeout/RAF variables in outer scope for cleanup
+    let resizeTimeout: NodeJS.Timeout | null = null;
+    let scrollTimeout: NodeJS.Timeout | null = null;
+    let scrollRAF: number | null = null;
+    
+    // Throttle resize handler for better performance - use requestIdleCallback when available
     const handleResize = () => {
-      requestAnimationFrame(updateLightPillarHeight);
+      if (resizeTimeout) return;
+      resizeTimeout = setTimeout(() => {
+        const scheduleUpdate = () => {
+          if ('requestIdleCallback' in window) {
+            (window as any).requestIdleCallback(updateLightPillarHeight, { timeout: 200 });
+          } else {
+            requestAnimationFrame(updateLightPillarHeight);
+          }
+        };
+        scheduleUpdate();
+        resizeTimeout = null;
+      }, 200); // Throttle to max once per 200ms
     };
+    
+    // Optimize scroll handler - debounce updates to reduce CPU usage
     const handleScroll = () => {
-      requestAnimationFrame(updateLightPillarHeight);
+      // Cancel pending updates
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      if (scrollRAF !== null) cancelAnimationFrame(scrollRAF);
+      
+      // Debounce: only recalculate after scrolling stops (300ms delay)
+      scrollTimeout = setTimeout(() => {
+        scrollRAF = requestAnimationFrame(() => {
+          updateLightPillarHeight();
+          scrollRAF = null;
+        });
+      }, 300); // Increased debounce for better battery life
     };
     
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Use ResizeObserver to watch for content changes
+    // Use ResizeObserver to watch for content changes - throttled for performance
     let resizeObserver: ResizeObserver | null = null;
     let mutationObserver: MutationObserver | null = null;
+    let observerTimeout: NodeJS.Timeout | null = null;
+    
+    const throttledObserverUpdate = () => {
+      if (observerTimeout) return;
+      observerTimeout = setTimeout(() => {
+        requestAnimationFrame(updateLightPillarHeight);
+        observerTimeout = null;
+      }, 200); // Throttle observer updates
+    };
     
     if (heroComparisonRef.current) {
-      resizeObserver = new ResizeObserver(() => {
-        requestAnimationFrame(updateLightPillarHeight);
-      });
+      resizeObserver = new ResizeObserver(throttledObserverUpdate);
       resizeObserver.observe(heroComparisonRef.current);
       
-      // Use MutationObserver to detect when elements are added to DOM
-      mutationObserver = new MutationObserver(() => {
-        requestAnimationFrame(updateLightPillarHeight);
-      });
+      // Use MutationObserver with throttling - only watch for significant changes
+      mutationObserver = new MutationObserver(throttledObserverUpdate);
       mutationObserver.observe(heroComparisonRef.current, {
         childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
+        subtree: false, // Only direct children, not deep subtree
+        attributes: false // Don't watch attribute changes for performance
       });
       
-      // Also observe the purple line for changes
+      // Also observe the purple line for changes - only once after initial render
       const findPurpleLine = () => {
         return heroComparisonRef.current?.querySelector('div[style*="linear-gradient"]') ||
                Array.from(heroComparisonRef.current?.querySelectorAll('div') || []).find(
@@ -184,21 +227,21 @@ export default function Home() {
                );
       };
       
-      // Check for purple line periodically
-      const checkPurpleLine = () => {
+      // Check for purple line once after content loads
+      setTimeout(() => {
         const purpleLine = findPurpleLine();
         if (purpleLine && resizeObserver) {
           resizeObserver.observe(purpleLine);
         }
-      };
-      
-      setTimeout(checkPurpleLine, 200);
-      setTimeout(checkPurpleLine, 500);
-      setTimeout(checkPurpleLine, 1000);
+      }, 500);
     }
     
     return () => {
       clearTimeout(timer);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      if (observerTimeout) clearTimeout(observerTimeout);
+      if (scrollRAF !== null) cancelAnimationFrame(scrollRAF);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
       if (resizeObserver) {
@@ -218,7 +261,7 @@ export default function Home() {
       </AnimatePresence>
       
       {showContent && (
-        <div className="min-h-screen bg-background/95 text-foreground flex flex-col relative overflow-visible">
+        <div className="min-h-screen bg-background/95 text-foreground flex flex-col relative overflow-visible" style={{ transform: 'none' }}>
           {/* LaserFlow moved to Hero component - removed from here */}
           {/* <MagicRibbon /> Hidden - replaced with ColorBends */}
           <Navbar />
@@ -238,19 +281,21 @@ export default function Home() {
                   height: lightPillarHeight
                 }}
               >
-                <LightPillar
-                  topColor="#6B27FF"
-                  bottomColor="#E89FFC"
-                  intensity={1.0}
-                  rotationSpeed={0.1}
-                  glowAmount={0.001}
-                  pillarWidth={3.0}
-                  pillarHeight={0.4}
-                  noiseIntensity={0.5}
-                  pillarRotation={25}
-                  interactive={false}
-                  mixBlendMode="normal"
-                />
+                {!isMobile && (
+                  <LightPillar
+                    topColor="#6B27FF"
+                    bottomColor="#E89FFC"
+                    intensity={1.0}
+                    rotationSpeed={0.1}
+                    glowAmount={0.001}
+                    pillarWidth={3.0}
+                    pillarHeight={0.4}
+                    noiseIntensity={0.5}
+                    pillarRotation={25}
+                    interactive={false}
+                    mixBlendMode="normal"
+                  />
+                )}
               </div>
               <Hero />
               <div className="relative z-10">
