@@ -17,6 +17,10 @@ export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const newsletterRef = useRef<HTMLDivElement>(null);
+  const copyrightRef = useRef<HTMLDivElement>(null);
+  const [separator1Top, setSeparator1Top] = useState<number>(0);
+  const [separator2Top, setSeparator2Top] = useState<number>(0);
 
   const footerLinks = [
     { name: "Home", href: "/" },
@@ -24,13 +28,63 @@ export default function Footer() {
     { name: "Contact", href: "/contact" },
   ];
 
+  useEffect(() => {
+    const updateSeparatorPositions = () => {
+      if (newsletterRef.current && copyrightRef.current) {
+        const footer = newsletterRef.current.closest('footer');
+        if (footer) {
+          const footerTop = footer.getBoundingClientRect().top;
+          const newsletterTop = newsletterRef.current.getBoundingClientRect().top;
+          const copyrightTop = copyrightRef.current.getBoundingClientRect().top;
+          
+          // Position relative to footer (separators are siblings of laser container)
+          setSeparator1Top(newsletterTop - footerTop);
+          setSeparator2Top(copyrightTop - footerTop);
+        }
+      }
+    };
+
+    updateSeparatorPositions();
+    window.addEventListener('resize', updateSeparatorPositions);
+    
+    // Also update after a short delay to account for any dynamic content loading
+    const timeout = setTimeout(updateSeparatorPositions, 100);
+
+    return () => {
+      window.removeEventListener('resize', updateSeparatorPositions);
+      clearTimeout(timeout);
+    };
+  }, [email, submitStatus]);
+
 
 
   return (
     <footer className="relative mt-8 sm:mt-12 md:mt-16 overflow-visible">
+      {/* Separator lines - positioned below laser beam (z-[1]) */}
+      {separator1Top > 0 && (
+        <div 
+          className="absolute left-0 right-0 z-[1] pointer-events-none hidden md:block" 
+          style={{ top: `${separator1Top}px` }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="h-px bg-border"></div>
+          </div>
+        </div>
+      )}
+      {separator2Top > 0 && (
+        <div 
+          className="absolute left-0 right-0 z-[1] pointer-events-none hidden md:block" 
+          style={{ top: `${separator2Top}px` }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="h-px bg-border"></div>
+          </div>
+        </div>
+      )}
+      
       {/* LaserFlow background - positioned at top of footer - extends upward to use all space above - hidden on mobile, visible on tablet and desktop */}
       <div 
-        className="absolute pointer-events-none z-0 hidden md:block" 
+        className="absolute pointer-events-none z-[2] hidden md:block" 
         style={{ 
           // Extend upward significantly - 3000px should cover most page heights
           top: '-3000px',
@@ -40,7 +94,7 @@ export default function Footer() {
           height: 'calc(100% + 3000px)'
         }}
       >
-        <div className="absolute inset-0 z-[2]" style={{ width: '100%', height: '100%' }}>
+        <div className="absolute inset-0" style={{ width: '100%', height: '100%' }}>
           <LaserFlow
             horizontalBeamOffset={0}
             verticalBeamOffset={-0.5}
@@ -119,7 +173,7 @@ export default function Footer() {
         </div>
 
         {/* Newsletter Section - Bottom, Full Width */}
-        <div className="border-t border-border pt-6 sm:pt-8">
+        <div ref={newsletterRef} className="pt-6 sm:pt-8">
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] md:grid-rows-[auto_auto] gap-4 mb-4 sm:mb-6">
             <h3 className="text-xl sm:text-2xl font-bold text-foreground md:col-start-1 md:row-start-1">
               Join our newsletter
@@ -201,7 +255,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright & Links */}
-        <div className="mt-8 sm:mt-10 pt-6 sm:pt-6 border-t border-border">
+        <div ref={copyrightRef} className="mt-8 sm:mt-10 pt-6 sm:pt-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
             <div className="flex flex-col gap-2">
               <p className="text-xs sm:text-sm text-center sm:text-left" style={{ color: 'rgba(255, 250, 240, 0.9)' }}>
