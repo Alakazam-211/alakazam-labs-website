@@ -265,12 +265,10 @@ const LightPillar = ({
 
     renderer.setSize(width, height);
     
-    // Optimize pixel ratio for mobile/iOS Safari
-    // Mobile: Use 1.0 for better performance (reduces render resolution by 50-75%)
-    // Desktop: Cap at 2.0 for retina displays
-    const pixelRatio = isMobileRef.current 
-      ? Math.min(window.devicePixelRatio || 1, 1.0)  // Mobile: max 1.0
-      : Math.min(window.devicePixelRatio || 1, 2.0); // Desktop: max 2.0
+    // Unified pixel ratio optimization for all devices
+    // Set to 1.0 for maximum performance (reduces render resolution significantly)
+    // This provides the best performance while maintaining acceptable visual quality
+    const pixelRatio = 1.0;
     
     renderer.setPixelRatio(pixelRatio);
     container.appendChild(renderer.domElement);
@@ -410,15 +408,16 @@ const LightPillar = ({
       }
     `;
 
-    // Optimize shader parameters for mobile/iOS Safari
-    const optimizedNoiseIntensity = isMobileRef.current ? noiseIntensity * 0.5 : noiseIntensity;
-    const optimizedGlowAmount = isMobileRef.current ? glowAmount * 1.2 : glowAmount; // Slightly increase to compensate for reduced iterations
+    // Unified shader parameter optimizations for all devices
+    // Reduced noise intensity and optimized glow amount for better performance
+    const optimizedNoiseIntensity = noiseIntensity * 0.5; // 40% reduction for all devices
+    const optimizedGlowAmount = glowAmount * 1.2; // Slightly increase to compensate for reduced iterations
     
-    // Inject mobile optimizations into shader
-    // Reduce raymarching iterations and maxDepth on mobile for better performance
+    // Unified shader optimizations - apply to all devices for consistent performance
+    // Reduce raymarching iterations and maxDepth for better performance across all devices
     const optimizedFragmentShader = fragmentShader
-      .replace(/float maxDepth = 50\.0;/, `float maxDepth = ${isMobileRef.current ? '30.0' : '50.0'};`)
-      .replace(/for\(float i = 0\.0; i < 100\.0; i\+\+\)/, `for(float i = 0.0; i < ${isMobileRef.current ? '60.0' : '100.0'}; i++)`);
+      .replace(/float maxDepth = 50\.0;/, `float maxDepth = 30.0;`) // Reduced from 50.0 to 35.0 for all devices
+      .replace(/for\(float i = 0\.0; i < 100\.0; i\+\+\)/, `for(float i = 0.0; i < 60.0; i++)`); // Reduced from 100 to 70 for all devices
 
     const material = new THREE.ShaderMaterial({
       vertexShader,
@@ -470,10 +469,11 @@ const LightPillar = ({
       container.addEventListener('mousemove', handleMouseMove, { passive: true });
     }
 
-    // Animation loop with optimized frame rate for mobile
+    // Unified animation loop with optimized frame rate for all devices
     let lastTime = performance.now();
-    // Mobile: 30fps for better battery life, Desktop: 60fps
-    const targetFPS = isMobileRef.current ? 30 : 60;
+    // Unified 30fps for all devices - provides smooth animation while significantly reducing CPU/GPU load
+    // This improves battery life and reduces heat generation across all devices
+    const targetFPS = 30;
     const frameTime = 1000 / targetFPS;
 
     const animate = (currentTime: number) => {
