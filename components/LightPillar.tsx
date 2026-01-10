@@ -79,6 +79,37 @@ const LightPillar = ({
   const [webGLSupported, setWebGLSupported] = useState(true);
   const [threeLoaded, setThreeLoaded] = useState(false);
   const [containerReady, setContainerReady] = useState(false);
+  const isInViewRef = useRef(true);
+  const pausedRef = useRef(false);
+  
+  // Detect mobile and iOS Safari for optimizations
+  const isMobileRef = useRef(false);
+  const isIOSSafariRef = useRef(false);
+  
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Detect mobile
+    const checkMobile = () => {
+      isMobileRef.current = window.innerWidth < 768 || 
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
+    
+    // Detect iOS Safari specifically
+    const checkIOSSafari = () => {
+      const ua = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(ua);
+      const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|OPiOS/.test(ua);
+      isIOSSafariRef.current = isIOS && isSafari;
+    };
+    
+    checkMobile();
+    checkIOSSafari();
+    
+    // Re-check on resize
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Load Three.js
   useEffect(() => {
@@ -98,6 +129,39 @@ const LightPillar = ({
       setWebGLSupported(false);
       console.warn('WebGL is not supported in this browser');
     }
+  }, []);
+
+  // IntersectionObserver to pause when not visible (mobile optimization)
+  useEffect(() => {
+    if (!containerRef.current || typeof window === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isInViewRef.current = entry.isIntersecting;
+        });
+      },
+      {
+        rootMargin: '50px', // Start loading slightly before visible
+        threshold: 0
+      }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Pause when tab is hidden (battery optimization)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      pausedRef.current = document.hidden;
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   useEffect(() => {
@@ -200,7 +264,15 @@ const LightPillar = ({
     }
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Optimize pixel ratio for mobile/iOS Safari
+    // Mobile: Use 1.0 for better performance (reduces render resolution by 50-75%)
+    // Desktop: Cap at 2.0 for retina displays
+    const pixelRatio = isMobileRef.current 
+      ? Math.min(window.devicePixelRatio || 1, 1.0)  // Mobile: max 1.0
+      : Math.min(window.devicePixelRatio || 1, 2.0); // Desktop: max 2.0
+    
+    renderer.setPixelRatio(pixelRatio);
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -338,9 +410,19 @@ const LightPillar = ({
       }
     `;
 
+    // Optimize shader parameters for mobile/iOS Safari
+    const optimizedNoiseIntensity = isMobileRef.current ? noiseIntensity * 0.5 : noiseIntensity;
+    const optimizedGlowAmount = isMobileRef.current ? glowAmount * 1.2 : glowAmount; // Slightly increase to compensate for reduced iterations
+    
+    // Inject mobile optimizations into shader
+    // Reduce raymarching iterations and maxDepth on mobile for better performance
+    const optimizedFragmentShader = fragmentShader
+      .replace(/float maxDepth = 50\.0;/, `float maxDepth = ${isMobileRef.current ? '30.0' : '50.0'};`)
+      .replace(/for\(float i = 0\.0; i < 100\.0; i\+\+\)/, `for(float i = 0.0; i < ${isMobileRef.current ? '60.0' : '100.0'}; i++)`);
+
     const material = new THREE.ShaderMaterial({
       vertexShader,
-      fragmentShader,
+      fragmentShader: optimizedFragmentShader,
       uniforms: {
         uTime: { value: 0 },
         uResolution: { value: new THREE.Vector2(width, height) },
@@ -349,10 +431,10 @@ const LightPillar = ({
         uBottomColor: { value: parseColor(bottomColor) },
         uIntensity: { value: intensity },
         uInteractive: { value: interactive },
-        uGlowAmount: { value: glowAmount },
+        uGlowAmount: { value: optimizedGlowAmount },
         uPillarWidth: { value: pillarWidth },
         uPillarHeight: { value: pillarHeight },
-        uNoiseIntensity: { value: noiseIntensity },
+        uNoiseIntensity: { value: optimizedNoiseIntensity },
         uPillarRotation: { value: pillarRotation }
       },
       transparent: true,
@@ -388,18 +470,25 @@ const LightPillar = ({
       container.addEventListener('mousemove', handleMouseMove, { passive: true });
     }
 
-    // Animation loop with fixed timestep
+    // Animation loop with optimized frame rate for mobile
     let lastTime = performance.now();
-    const targetFPS = 60;
+    // Mobile: 30fps for better battery life, Desktop: 60fps
+    const targetFPS = isMobileRef.current ? 30 : 60;
     const frameTime = 1000 / targetFPS;
 
     const animate = (currentTime: number) => {
       if (!materialRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) return;
 
+      // Pause when not visible or tab is hidden (battery optimization)
+      if (!isInViewRef.current || pausedRef.current) {
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       const deltaTime = currentTime - lastTime;
 
       if (deltaTime >= frameTime) {
-        timeRef.current += 0.016 * rotationSpeed;
+        timeRef.current += (frameTime / 1000) * rotationSpeed;
         materialRef.current.uniforms.uTime.value = timeRef.current;
         rendererRef.current.render(sceneRef.current, cameraRef.current);
         lastTime = currentTime - (deltaTime % frameTime);
