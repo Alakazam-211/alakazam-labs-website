@@ -46,8 +46,8 @@ export default function SolutionsPage() {
       <Navbar />
       <div className="relative flex-grow">
         <div className="relative">
-          <section className="py-32 relative">
-            <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <section className="py-32 relative z-[20]">
+            <div className="container mx-auto px-4 md:px-6 relative z-[20]">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
