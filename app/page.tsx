@@ -281,21 +281,19 @@ export default function Home() {
                   height: lightPillarHeight
                 }}
               >
-                {!isMobile && (
-                  <LightPillar
-                    topColor="#6B27FF"
-                    bottomColor="#E89FFC"
-                    intensity={1.0}
-                    rotationSpeed={0.1}
-                    glowAmount={0.001}
-                    pillarWidth={3.0}
-                    pillarHeight={0.4}
-                    noiseIntensity={0.5}
-                    pillarRotation={25}
-                    interactive={false}
-                    mixBlendMode="normal"
-                  />
-                )}
+                <LightPillar
+                  topColor="#6B27FF"
+                  bottomColor="#E89FFC"
+                  intensity={1.0}
+                  rotationSpeed={0.1}
+                  glowAmount={0.001}
+                  pillarWidth={3.0}
+                  pillarHeight={0.4}
+                  noiseIntensity={0.5}
+                  pillarRotation={25}
+                  interactive={false}
+                  mixBlendMode="normal"
+                />
               </div>
               <Hero />
               <div className="relative z-10">
