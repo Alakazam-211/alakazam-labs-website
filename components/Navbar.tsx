@@ -1,16 +1,26 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Rocket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -41,9 +51,13 @@ export default function Navbar() {
         damping: 24,
         mass: 0.9
       }}
-      className="fixed top-0 left-0 right-0 z-[9999] transform-gpu will-change-transform px-4 pt-4 w-full bg-background/80 backdrop-blur-sm"
+      className="fixed top-0 left-0 right-0 z-[9999] transform-gpu will-change-transform px-4 pt-4 w-full"
     >
-      <nav className="bg-background/95 border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] hover:shadow-[0_12px_48px_0_rgba(255,255,255,0.15)] transition-shadow duration-300 relative max-w-7xl mx-auto overflow-hidden">
+      <nav className={`border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] hover:shadow-[0_12px_48px_0_rgba(255,255,255,0.15)] transition-all duration-300 relative max-w-7xl mx-auto overflow-hidden ${
+        isScrolled 
+          ? 'bg-background/95 backdrop-blur-md' 
+          : 'bg-transparent'
+      }`}>
         <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2 cursor-pointer z-50">
@@ -75,15 +89,24 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop CTA Button */}
-          <div className="hidden md:flex items-center">
+          {/* Desktop CTA Buttons */}
+          <div className="hidden md:flex items-center gap-3">
             <Button
               size="sm"
-              className="gold-shimmer bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-4"
+              className="gold-shimmer bg-accent text-accent-foreground hover:bg-accent text-sm px-4"
               onClick={() => router.push('/book')}
             >
               <Sparkles className="mr-2 w-4 h-4" />
-              Book a Session
+              Book Workshop
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-2 border-accent/50 text-accent hover:bg-accent/10 hover:text-accent bg-transparent text-sm px-4"
+              onClick={() => router.push('/rnd')}
+            >
+              <Rocket className="mr-2 w-4 h-4" />
+              Start R&D
             </Button>
           </div>
 
@@ -148,15 +171,24 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: navLinks.length * 0.05 }}
-                  className="pt-2 border-t border-white/10"
+                  className="pt-2 border-t border-white/10 space-y-3"
                 >
                   <Button
                     size="sm"
-                    className="w-full gold-shimmer bg-accent text-accent-foreground hover:bg-accent/90 mt-4"
+                    className="w-full gold-shimmer bg-accent text-accent-foreground hover:bg-accent border-2 border-accent focus-visible:ring-0"
                     onClick={() => handleNavClick('/book')}
                   >
                     <Sparkles className="mr-2 w-4 h-4" />
-                    Book a Session
+                    Book Workshop
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full border-2 border-accent/50 text-accent hover:bg-accent/10 hover:text-accent bg-transparent"
+                    onClick={() => handleNavClick('/rnd')}
+                  >
+                    <Rocket className="mr-2 w-4 h-4" />
+                    Start R&D
                   </Button>
                 </motion.div>
               </div>

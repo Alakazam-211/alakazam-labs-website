@@ -47,7 +47,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: hsl(var(--background));
     font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
@@ -102,12 +103,22 @@
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.2);
   transform: translateZ(0);
   will-change: box-shadow;
+  transition: box-shadow 150ms ease-in-out;
+}
+
+.gold-shimmer:hover {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.3), 0 0 90px rgba(255, 215, 0, 0.15);
 }
 
 .gold-shimmer-strong {
   box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3);
   transform: translateZ(0);
   will-change: box-shadow;
+  transition: box-shadow 150ms ease-in-out;
+}
+
+.gold-shimmer-strong:hover {
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.5), 0 0 80px rgba(255, 215, 0, 0.35), 0 0 120px rgba(255, 215, 0, 0.2);
 }
 
 /* Ripple distortion animation - disabled by default for performance */
@@ -129,98 +140,9 @@
 /* Respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .ripple-effect,
-  .float-particle,
-  .ribbon-particle,
   .cta-bg-animation {
     animation: none !important;
   }
-}
-
-/* Particle float animation - optimized with GPU acceleration */
-@keyframes float {
-  0%, 100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -20px, 0);
-  }
-}
-
-.float-particle {
-  animation: float 6s ease-in-out infinite;
-  will-change: transform;
-  transform: translateZ(0); /* Force GPU acceleration */
-}
-
-/* Optimized ribbon particles - CSS animations instead of JS - moving horizontally around ribbon */
-@keyframes ribbonParticle1 {
-  0%, 100% {
-    transform: translate3d(calc(-50% - 30px), 0, 0) scale(0.8);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translate3d(calc(-50% + 30px), 0, 0) scale(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes ribbonParticle2 {
-  0%, 100% {
-    transform: translate3d(calc(-50% + 30px), 0, 0) scale(0.8);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translate3d(calc(-50% - 30px), 0, 0) scale(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes ribbonParticle3 {
-  0%, 100% {
-    transform: translate3d(calc(-50% - 25px), 0, 0) scale(0.7);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translate3d(calc(-50% + 25px), 0, 0) scale(1.1);
-    opacity: 0.9;
-  }
-}
-
-.ribbon-particle {
-  position: absolute;
-  left: 50%;
-  border-radius: 50%;
-  pointer-events: none;
-  will-change: transform, opacity;
-  transform: translateZ(0); /* Force GPU acceleration */
-  contain: none;
-}
-
-.ribbon-particle-1 {
-  top: 15%;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: hsl(var(--primary));
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.9);
-  animation: ribbonParticle1 5s ease-in-out infinite;
-}
-
-.ribbon-particle-2 {
-  top: 35%;
-  width: 0.625rem;
-  height: 0.625rem;
-  background: hsl(var(--secondary));
-  box-shadow: 0 0 12px rgba(0, 191, 255, 0.9);
-  animation: ribbonParticle2 6s ease-in-out infinite 0.8s;
-}
-
-.ribbon-particle-3 {
-  top: 55%;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: hsl(var(--accent));
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
-  animation: ribbonParticle3 5.5s ease-in-out infinite 1.5s;
 }
 
 /* CTA background animation - CSS instead of JS */
@@ -589,7 +511,6 @@
   .glass-avatar,
   .aura-gradient,
   .aura-gradient-blue,
-  .ribbon-particle,
   .cta-bg-animation,
   .gradient-text,
   .glass-card {
@@ -716,3 +637,147 @@
   will-change: background-position;
 }
 
+
+/* Color Bends Background - CSS-based implementation */
+.color-bend {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  filter: blur(80px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.color-bend-1 {
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.6) 0%,
+    rgba(0, 191, 255, 0.6) 50%,
+    rgba(168, 85, 247, 0.4) 100%
+  );
+  top: -20%;
+  left: -10%;
+  width: 40%;
+  height: 60%;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.color-bend-2 {
+  background: linear-gradient(
+    45deg,
+    rgba(0, 191, 255, 0.6) 0%,
+    rgba(255, 215, 0, 0.6) 50%,
+    rgba(0, 191, 255, 0.4) 100%
+  );
+  top: 10%;
+  right: -5%;
+  width: 35%;
+  height: 50%;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+}
+
+.color-bend-3 {
+  background: linear-gradient(
+    225deg,
+    rgba(255, 215, 0, 0.6) 0%,
+    rgba(168, 85, 247, 0.6) 50%,
+    rgba(255, 215, 0, 0.4) 100%
+  );
+  bottom: -15%;
+  left: 20%;
+  width: 45%;
+  height: 55%;
+  border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+}
+
+.color-bend-4 {
+  background: linear-gradient(
+    90deg,
+    rgba(168, 85, 247, 0.5) 0%,
+    rgba(0, 191, 255, 0.5) 100%
+  );
+  top: 30%;
+  left: 5%;
+  width: 30%;
+  height: 40%;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.color-bend-5 {
+  background: linear-gradient(
+    270deg,
+    rgba(0, 191, 255, 0.5) 0%,
+    rgba(255, 215, 0, 0.5) 100%
+  );
+  bottom: 20%;
+  right: 10%;
+  width: 35%;
+  height: 45%;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+/* Color Bends Animations */
+@keyframes colorBend1 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(5%, -3%) rotate(5deg) scale(1.1);
+  }
+  66% {
+    transform: translate(-3%, 5%) rotate(-5deg) scale(0.95);
+  }
+}
+
+@keyframes colorBend2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(-4%, 4%) rotate(-8deg) scale(1.05);
+  }
+  66% {
+    transform: translate(4%, -2%) rotate(8deg) scale(0.98);
+  }
+}
+
+@keyframes colorBend3 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(3%, 6%) rotate(6deg) scale(1.08);
+  }
+  66% {
+    transform: translate(-5%, -4%) rotate(-6deg) scale(0.92);
+  }
+}
+
+@keyframes colorBend4 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(2%, -2%) rotate(10deg) scale(1.05);
+  }
+}
+
+@keyframes colorBend5 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-3%, 3%) rotate(-10deg) scale(1.05);
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .color-bend {
+    animation: none !important;
+  }
+}

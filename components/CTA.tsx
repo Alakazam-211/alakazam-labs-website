@@ -1,8 +1,9 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function CTA() {
   const router = useRouter();
@@ -20,14 +21,36 @@ export default function CTA() {
           <p className="text-xl text-muted-foreground mb-10">
             Transform your business with AI that feels effortless and looks extraordinary.
           </p>
-          <Button 
-            size="lg" 
-            className="text-lg px-10 py-7 gold-shimmer-strong bg-accent text-accent-foreground hover:bg-accent/90"
-            onClick={() => router.push('/book')}
-          >
-            <Sparkles className="mr-2" />
-            Book Your Magic Session
-          </Button>
+          
+          {/* Two CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+            <Button 
+              size="lg" 
+              className="text-lg px-10 py-7 gold-shimmer-strong bg-accent text-accent-foreground hover:bg-accent border-2 border-accent focus-visible:ring-0 w-full sm:w-auto"
+              onClick={() => router.push('/book')}
+            >
+              <Sparkles className="mr-2" />
+              Book Workshop
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="text-lg px-10 py-7 border-2 border-accent/50 text-accent hover:bg-accent/10 hover:text-accent w-full sm:w-auto"
+              onClick={() => router.push('/rnd')}
+            >
+              <Rocket className="mr-2" />
+              Start R&D
+            </Button>
+          </div>
+          
+          <p className="text-sm text-muted-foreground">
+            <Link 
+              href="/terms" 
+              className="hover:underline transition-all"
+            >
+              30-day money back guarantee<sup className="text-accent">*</sup>
+            </Link>
+          </p>
         </div>
       </div>
     </section>

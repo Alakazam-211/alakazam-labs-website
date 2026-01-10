@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
@@ -99,30 +99,32 @@ export default function Solutions() {
 
   const paths = [
     {
-      title: "Custom White-Glove",
-      description: "Work directly with us to build your custom app from scratch. We'll prototype it in your first session and deliver a production-ready MVP in days, not months.",
+      title: "Book Workshop",
+      description: "Join us for a hands-on workshop session where we'll build a working prototype together. Perfect for those who want to see the magic happen in real-time.",
       features: [
-        "Custom-built for your exact needs",
-        "Working prototype in first session",
-        "Full production deployment",
-        "Ongoing support & iterations"
+        "Interactive workshop session",
+        "Working prototype built live",
+        "Learn as we build",
+        "Immediate results"
       ],
-      cta: "Book Your Magic Session",
+      cta: "Book Workshop",
       highlight: true,
-      action: () => router.push('/book')
+      action: () => router.push('/book'),
+      icon: Sparkles
     },
     {
-      title: "Proven Solutions",
-      description: "Start with one of our proven solutions and customize it to match your brand and workflow. Get up and running in hours with a battle-tested foundation.",
+      title: "Start R&D",
+      description: "Submit your idea and we'll make sure it's possible with AI before you build. Keep the research and use it with us to build or someone else.",
       features: [
-        "Pre-built, proven solutions",
-        "Quick customization & branding",
-        "Faster time to market",
-        "Cost-effective approach"
+        "Submit your idea via form",
+        "Dedicated R&D process",
+        "Clarity on feasibility and cost",
+        "Proof of concept"
       ],
-      cta: "Browse Proven Solutions",
+      cta: "Start R&D",
       highlight: false,
-      action: () => router.push('/solutions')
+      action: () => router.push('/rnd'),
+      icon: Rocket
     }
   ];
 
@@ -163,13 +165,12 @@ export default function Solutions() {
                   onClick={path.action}
                   className={`w-full ${
                     path.highlight 
-                      ? 'gold-shimmer-strong bg-accent text-accent-foreground hover:bg-accent/90' 
-                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                      ? 'gold-shimmer-strong bg-accent text-accent-foreground hover:bg-accent border-2 border-accent focus-visible:ring-0' 
+                      : 'border-2 border-accent/50 text-accent hover:bg-accent/10 hover:text-accent bg-transparent'
                   }`}
                 >
-                  {path.highlight && <Sparkles className="mr-2 w-4 h-4" />}
+                  {path.icon && <path.icon className="mr-2 w-4 h-4" />}
                   {path.cta}
-                  {!path.highlight && <ArrowRight className="ml-2 w-4 h-4" />}
                 </Button>
               </Card>
             </div>

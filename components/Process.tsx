@@ -1,14 +1,13 @@
 'use client';
 
 import { Card } from "@/components/ui/card";
-import { Eye, Wand2, Rocket, Sparkles, ArrowRight } from "lucide-react";
+import { FlaskConical, FileText, Hammer, ArrowRight } from "lucide-react";
 
 export default function Process() {
   const steps = [
-    {icon: Wand2, title: "Magic", description: "Get your prototype or skinned template", color: "text-yellow-500"}, 
-    {icon: Eye, title: "Future Sight", description: "We uncover your needs and understand your vision", color: "text-secondary"}, 
-    {icon: Sparkles, title: "Conjure", description: "Implement Future Sight and complete your custom MVP", color: "text-primary"}, 
-    {icon: Rocket, title: "Deploy", description: "Launch your MVP, get it into users hands", color: "text-accent"}
+    {icon: FlaskConical, title: "R&D", description: "Find out if what you want to do with AI is possible before you start.", color: "text-yellow-500"}, 
+    {icon: FileText, title: "Proposal", description: "Discuss the scope and objectives. Determine timeline and milestones.", color: "text-secondary"}, 
+    {icon: Hammer, title: "Build", description: "Execute the proposal with weekly progress reviews.", color: "text-accent"}
   ];
   
   return (
@@ -19,7 +18,7 @@ export default function Process() {
         </h2>
 
         <div className="max-w-6xl mx-auto relative">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             {steps.map((step, i) => (
               <div key={i} className="relative">
                 <Card className="p-8 text-center bg-card/50 backdrop-blur hover:scale-105 transition-transform w-full flex flex-col h-full">
@@ -34,7 +33,10 @@ export default function Process() {
                 
                 {/* Arrow positioned absolutely between cards */}
                 {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-[45%] -translate-y-1/2 -right-[12%] z-20">
+                  <div 
+                    className="hidden md:block absolute top-[45%] -right-[8%] z-20"
+                    style={{ transform: 'translate(2px, calc(-50% + 4px))' }}
+                  >
                     <ArrowRight className="w-8 h-8 text-accent" />
                   </div>
                 )}

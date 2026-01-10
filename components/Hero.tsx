@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Sparkles, Zap, TrendingUp } from "lucide-react";
+import { Sparkles, Zap, TrendingUp, Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StarRating from "@/components/testimonials/StarRating";
 import OverlappedAvatars from "@/components/testimonials/OverlappedAvatars";
+import dynamic from 'next/dynamic';
+
 
 interface Testimonial {
   id: string;
@@ -47,13 +49,10 @@ export default function Hero() {
     ? testimonials.reduce((sum, t) => sum + (t.rating || 0), 0) / testimonials.length
     : 0;
 
-  return <section id="hero" className="relative z-50 min-h-screen flex items-center justify-center pt-[130px] md:pt-32 pb-8 md:pb-0">
-      {/* Static background gradient - no animation */}
-      <div className="absolute inset-0 aura-gradient" />
-      <div className="absolute top-20 left-20 w-64 h-64 rounded-full aura-gradient-blue blur-3xl opacity-30" />
-      <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full aura-gradient blur-3xl opacity-20" />
+  return <section id="hero" className="relative z-10 h-screen md:h-[820px] lg:h-[920px] flex items-center justify-center pt-[130px] md:pt-32 pb-8 md:pb-0 overflow-visible">
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      {/* Removed opaque backgrounds to show ColorBends */}
+      <div className="container mx-auto px-4 md:px-6 relative z-[2]">
         <motion.div initial={{
         opacity: 0,
         y: 30
@@ -91,14 +90,23 @@ export default function Hero() {
           scale: 1
         }} transition={{
           delay: 0.6
-        }} className="relative inline-block group z-0 mb-6">
+        }} className="relative flex flex-col sm:flex-row gap-4 justify-center items-center group z-0 mb-6">
             <Button 
               size="lg" 
-              className="text-lg px-10 py-7 gold-shimmer-strong bg-accent text-accent-foreground hover:bg-accent/90"
+              className="text-lg px-10 py-7 gold-shimmer-strong bg-accent text-accent-foreground hover:bg-accent border-2 border-accent focus-visible:ring-0 w-full sm:w-auto"
               onClick={() => router.push('/book')}
             >
               <Sparkles className="mr-2" />
-              Book Your Magic Session
+              Book Workshop
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="text-lg px-10 py-7 border-2 border-accent/50 text-accent hover:bg-accent/10 hover:text-accent w-full sm:w-auto"
+              onClick={() => router.push('/rnd')}
+            >
+              <Rocket className="mr-2" />
+              Start R&D
             </Button>
         </motion.div>
 
@@ -177,7 +185,7 @@ export default function Hero() {
           y: 0
         }} transition={{
           delay: 0.8
-        }} className="mt-24 md:mt-8 grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto">
+        }} className="mt-24 md:mt-8 mb-[112px] md:mb-[128px] grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto">
             <div className="flex flex-col items-center gap-1 md:gap-2">
               <TrendingUp className="w-5 h-5 md:w-8 md:h-8 text-secondary" />
               <div className="text-xl md:text-3xl font-bold text-secondary">40+</div>
