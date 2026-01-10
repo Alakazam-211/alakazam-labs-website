@@ -187,18 +187,18 @@ export default function Hero() {
           delay: 0.8
         }} className="mt-24 md:mt-8 mb-[112px] md:mb-[128px] grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto">
             <div className="flex flex-col items-center gap-1 md:gap-2">
-              <TrendingUp className="w-5 h-5 md:w-8 md:h-8 text-secondary" />
-              <div className="text-xl md:text-3xl font-bold text-secondary">40+</div>
+              <TrendingUp className="w-5 h-5 md:w-8 md:h-8 text-primary" />
+              <div className="text-xl md:text-3xl font-bold text-primary">40+</div>
               <div className='text-xs md:text-sm text-muted-foreground text-center'>Prototypes Built</div>
             </div>
             <div className="flex flex-col items-center gap-1 md:gap-2">
-              <Zap className="w-5 h-5 md:w-8 md:h-8 text-accent" />
-              <div className='text-xl md:text-3xl font-bold text-accent'>2 hrs</div>
+              <Zap className="w-5 h-5 md:w-8 md:h-8 text-secondary" />
+              <div className='text-xl md:text-3xl font-bold text-secondary'>2 hrs</div>
               <div className="text-xs md:text-sm text-muted-foreground text-center">1st Prototype</div>
             </div>
             <div className="flex flex-col items-center gap-1 md:gap-2">
-              <Sparkles className='w-5 h-5 md:w-8 md:h-8 text-primary' />
-              <div className="text-xl md:text-3xl font-bold text-primary">6-18 hrs</div>
+              <Sparkles className='w-5 h-5 md:w-8 md:h-8 text-accent' />
+              <div className="text-xl md:text-3xl font-bold text-accent">6-18 hrs</div>
               <div className="text-xs md:text-sm text-muted-foreground text-center">Avg. Build Time</div>
             </div>
           </motion.div>

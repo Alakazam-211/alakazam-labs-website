@@ -5,7 +5,7 @@ import { FlaskConical, FileText, Hammer, ArrowRight } from "lucide-react";
 
 export default function Process() {
   const steps = [
-    {icon: FlaskConical, title: "R&D", description: "Find out if what you want to do with AI is possible before you start.", color: "text-yellow-500"}, 
+    {icon: FlaskConical, title: "R&D", description: "Find out if what you want to do with AI is possible before you start.", color: "text-primary"}, 
     {icon: FileText, title: "Proposal", description: "Discuss the scope and objectives. Determine timeline and milestones.", color: "text-secondary"}, 
     {icon: Hammer, title: "Build", description: "Execute the proposal with weekly progress reviews.", color: "text-accent"}
   ];
