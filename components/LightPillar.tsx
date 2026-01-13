@@ -76,6 +76,7 @@ const LightPillar = ({
   const timeRef = useRef(0);
   const handleResizeRef = useRef<(() => void) | null>(null);
   const handleMouseMoveRef = useRef<((event: MouseEvent) => void) | null>(null);
+  const animateFunctionRef = useRef<((currentTime: number) => void) | null>(null); // Store animate function for resume
   const [webGLSupported, setWebGLSupported] = useState(true);
   const [threeLoaded, setThreeLoaded] = useState(false);
   const [containerReady, setContainerReady] = useState(false);
@@ -131,15 +132,22 @@ const LightPillar = ({
     }
   }, []);
 
-  // IntersectionObserver to pause when not visible (mobile optimization)
+  // IntersectionObserver to pause when not visible (mobile optimization) and resume when visible
   useEffect(() => {
     if (!containerRef.current || typeof window === 'undefined') return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          const wasInView = isInViewRef.current;
           isInViewRef.current = entry.isIntersecting;
-          // Note: Animation will resume automatically in the main useEffect when component becomes visible
+          
+          // Resume animation when component becomes visible again
+          if (entry.isIntersecting && !wasInView && !pausedRef.current && 
+              !rafRef.current && animateFunctionRef.current && 
+              materialRef.current && rendererRef.current && sceneRef.current && cameraRef.current) {
+            rafRef.current = requestAnimationFrame(animateFunctionRef.current);
+          }
         });
       },
       {
@@ -155,11 +163,18 @@ const LightPillar = ({
     };
   }, []);
 
-  // Pause when tab is hidden (battery optimization)
+  // Pause when tab is hidden (battery optimization) and resume when visible
   useEffect(() => {
     const handleVisibilityChange = () => {
+      const wasPaused = pausedRef.current;
       pausedRef.current = document.hidden;
-      // Note: Animation will resume automatically when the main useEffect detects visibility change
+      
+      // Resume animation when tab becomes visible again
+      if (!document.hidden && wasPaused && isInViewRef.current && 
+          !rafRef.current && animateFunctionRef.current && 
+          materialRef.current && rendererRef.current && sceneRef.current && cameraRef.current) {
+        rafRef.current = requestAnimationFrame(animateFunctionRef.current);
+      }
     };
     
     document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
@@ -502,13 +517,11 @@ const LightPillar = ({
       rafRef.current = requestAnimationFrame(animate);
     };
     
-    // Resume animation if it was stopped but conditions are now met
-    if (!rafRef.current && isInViewRef.current && !pausedRef.current) {
-      rafRef.current = requestAnimationFrame(animate);
-    } else if (!rafRef.current) {
-      // Start animation loop
-      rafRef.current = requestAnimationFrame(animate);
-    }
+    // Store animate function reference for resume capability
+    animateFunctionRef.current = animate;
+    
+    // Start animation loop
+    rafRef.current = requestAnimationFrame(animate);
 
     // Handle resize with debouncing
     let resizeTimeout: NodeJS.Timeout | null = null;
