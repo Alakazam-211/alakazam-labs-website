@@ -332,6 +332,7 @@ export const LaserFlow = ({
   const lockedWidthRef = useRef<number | null>(null);
   const lockedHeightRef = useRef<number | null>(null);
   const isMobileRef = useRef<boolean | null>(null);
+  const rafRef = useRef<number>(0); // Track animation frame ID
   const [threeLoaded, setThreeLoaded] = useState(false);
   const [webGLSupported, setWebGLSupported] = useState(true);
   const [isInView, setIsInView] = useState(false);
@@ -343,9 +344,12 @@ export const LaserFlow = ({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          const wasInView = inViewRef.current;
           if (entry.isIntersecting) {
             setIsInView(true);
             inViewRef.current = true;
+            // Resume animation if component becomes visible and was paused
+            // Note: Animation will be restarted in the main useEffect when isInView changes
           } else {
             inViewRef.current = false;
           }
@@ -632,6 +636,11 @@ export const LaserFlow = ({
 
     const onVis = () => {
       pausedRef.current = document.hidden;
+      // Resume animation if tab becomes visible and component is in view
+      if (!document.hidden && inViewRef.current && rafRef.current === 0 && rendererRef.current) {
+        // Restart animation loop
+        rafRef.current = requestAnimationFrame(animate);
+      }
     };
     document.addEventListener('visibilitychange', onVis, { passive: true });
 
@@ -702,8 +711,14 @@ export const LaserFlow = ({
     };
 
     const animate = () => {
+      // CRITICAL FIX: Stop animation loop entirely when paused to save CPU
+      if (pausedRef.current || !inViewRef.current) {
+        raf = 0;
+        rafRef.current = 0; // Stop the loop instead of continuing
+        return;
+      }
       raf = requestAnimationFrame(animate);
-      if (pausedRef.current || !inViewRef.current) return;
+      rafRef.current = raf; // Keep ref in sync
 
       const t = clock.getElapsedTime();
       const dt = Math.max(0, t - prevTime);
@@ -737,10 +752,12 @@ export const LaserFlow = ({
       adjustDprIfNeeded(performance.now());
     };
 
-    animate();
+    raf = requestAnimationFrame(animate);
+    rafRef.current = raf; // Initialize ref
 
     return () => {
-      cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
       ro.disconnect();
       document.removeEventListener('visibilitychange', onVis);

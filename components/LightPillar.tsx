@@ -139,6 +139,7 @@ const LightPillar = ({
       (entries) => {
         entries.forEach((entry) => {
           isInViewRef.current = entry.isIntersecting;
+          // Note: Animation will resume automatically in the main useEffect when component becomes visible
         });
       },
       {
@@ -158,6 +159,7 @@ const LightPillar = ({
   useEffect(() => {
     const handleVisibilityChange = () => {
       pausedRef.current = document.hidden;
+      // Note: Animation will resume automatically when the main useEffect detects visibility change
     };
     
     document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
@@ -477,11 +479,14 @@ const LightPillar = ({
     const frameTime = 1000 / targetFPS;
 
     const animate = (currentTime: number) => {
-      if (!materialRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) return;
+      if (!materialRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) {
+        rafRef.current = null;
+        return;
+      }
 
-      // Pause when not visible or tab is hidden (battery optimization)
+      // CRITICAL FIX: Stop animation loop entirely when paused to save CPU
       if (!isInViewRef.current || pausedRef.current) {
-        rafRef.current = requestAnimationFrame(animate);
+        rafRef.current = null; // Stop the loop instead of continuing
         return;
       }
 
@@ -496,7 +501,14 @@ const LightPillar = ({
 
       rafRef.current = requestAnimationFrame(animate);
     };
-    rafRef.current = requestAnimationFrame(animate);
+    
+    // Resume animation if it was stopped but conditions are now met
+    if (!rafRef.current && isInViewRef.current && !pausedRef.current) {
+      rafRef.current = requestAnimationFrame(animate);
+    } else if (!rafRef.current) {
+      // Start animation loop
+      rafRef.current = requestAnimationFrame(animate);
+    }
 
     // Handle resize with debouncing
     let resizeTimeout: NodeJS.Timeout | null = null;
@@ -584,6 +596,7 @@ const LightPillar = ({
   // Get parent height to ensure container fills parent
   const [parentHeight, setParentHeight] = useState<number>(0);
   const parentResizeObserverRef = useRef<ResizeObserver | null>(null);
+  const lastParentHeightRef = useRef<number>(0); // Track last height to prevent infinite loops
   
   // Set up parent height tracking when container ref is available
   useEffect(() => {
@@ -601,7 +614,9 @@ const LightPillar = ({
         if (node.parentElement) {
           const height = node.parentElement.clientHeight || node.parentElement.offsetHeight || 
                         parseInt(window.getComputedStyle(node.parentElement).height) || 0;
-          if (height > 0) {
+          // CRITICAL FIX: Only update if height actually changed (threshold of 1px to prevent loops)
+          if (height > 0 && Math.abs(height - lastParentHeightRef.current) > 1) {
+            lastParentHeightRef.current = height;
             setParentHeight(height);
             // Also set directly on the node as backup
             node.style.setProperty('height', `${height}px`, 'important');
@@ -653,8 +668,9 @@ const LightPillar = ({
         const parentHeightValue = parent.clientHeight || parent.offsetHeight || 
                                   parseInt(window.getComputedStyle(parent).height) || 0;
         
-        // Always update state first, then set style IMMEDIATELY (not in RAF)
-        if (parentHeightValue > 0) {
+        // CRITICAL FIX: Only update if height actually changed to prevent loops
+        if (parentHeightValue > 0 && Math.abs(parentHeightValue - lastParentHeightRef.current) > 1) {
+          lastParentHeightRef.current = parentHeightValue;
           // Update state immediately - this will trigger a re-render
           setParentHeight(parentHeightValue);
           
