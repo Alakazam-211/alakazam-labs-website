@@ -333,6 +333,7 @@ export const LaserFlow = ({
   const lockedHeightRef = useRef<number | null>(null);
   const isMobileRef = useRef<boolean | null>(null);
   const rafRef = useRef<number>(0); // Track animation frame ID
+  const animateFunctionRef = useRef<(() => void) | null>(null); // Store animate function for resume
   const [threeLoaded, setThreeLoaded] = useState(false);
   const [webGLSupported, setWebGLSupported] = useState(true);
   const [isInView, setIsInView] = useState(false);
@@ -348,8 +349,11 @@ export const LaserFlow = ({
           if (entry.isIntersecting) {
             setIsInView(true);
             inViewRef.current = true;
-            // Resume animation if component becomes visible and was paused
-            // Note: Animation will be restarted in the main useEffect when isInView changes
+            // Resume animation when component becomes visible again
+            if (!wasInView && !pausedRef.current && rafRef.current === 0 && 
+                animateFunctionRef.current && rendererRef.current) {
+              rafRef.current = requestAnimationFrame(animateFunctionRef.current);
+            }
           } else {
             inViewRef.current = false;
           }
@@ -635,11 +639,12 @@ export const LaserFlow = ({
     // inViewRef is managed by Intersection Observer - starts as false, becomes true when visible
 
     const onVis = () => {
+      const wasPaused = pausedRef.current;
       pausedRef.current = document.hidden;
-      // Resume animation if tab becomes visible and component is in view
-      if (!document.hidden && inViewRef.current && rafRef.current === 0 && rendererRef.current) {
-        // Restart animation loop
-        rafRef.current = requestAnimationFrame(animate);
+      // Resume animation when tab becomes visible again
+      if (!document.hidden && wasPaused && inViewRef.current && rafRef.current === 0 && 
+          animateFunctionRef.current && rendererRef.current) {
+        rafRef.current = requestAnimationFrame(animateFunctionRef.current);
       }
     };
     document.addEventListener('visibilitychange', onVis, { passive: true });
@@ -752,6 +757,9 @@ export const LaserFlow = ({
       adjustDprIfNeeded(performance.now());
     };
 
+    // Store animate function reference for resume capability
+    animateFunctionRef.current = animate;
+    
     raf = requestAnimationFrame(animate);
     rafRef.current = raf; // Initialize ref
 
